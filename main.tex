@@ -1,0 +1,35 @@
+\documentclass[11pt]{report}
+
+\setcounter{tocdepth}{3}
+\setcounter{secnumdepth}{3}
+
+\input{preamble.tex}
+
+\newcommand{\course}{IN4049TU Introduction to High Performance Computing}
+\title{Lab Report}
+\author{Philip Soliman (4945255)}
+\date{\today}
+
+
+\renewcommand{\thesection}{\Large\arabic{section}}
+\renewcommand{\thesubsection}{\large\quad\arabic{section}.\arabic{subsection}}
+\renewcommand{\thesubsubsection}{\large\quad\arabic{section}.\arabic{subsection}.\arabic{subsubsection}}
+
+% Change the (sub)section fonts & make subsec not do a newline - Jelmarp
+% \titleformat{\section}{\normalfont\fontsize{13}{13}\bfseries}{\thesection}{1em}{}
+% \titleformat{\subsection}[runin]{\normalfont\fontsize{12}{15}}{\thesubsection}{0.5em}{}[]
+%----------------------
+
+\begin{document}
+\maketitle
+
+\tableofcontents
+
+\newpage
+\input{sections/intro.tex}
+
+
+% \newpage
+% \printbibliography
+
+\end{document}

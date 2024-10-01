@@ -1,0 +1,10 @@
+# build files
+build/*.toc
+build/*.aux
+build/*.log
+build/*.out
+build/*.bcf
+build/*.xml
+build/*.fdb_latexmk
+build/*.fls
+build/*.synctex.gz
