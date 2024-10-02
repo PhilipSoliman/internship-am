@@ -1,0 +1,38 @@
+\section{Approach}
+\label{sec:approach}
+
+\subsection{Understand the complete problem, including the working of the machine}
+- Read documentation, look at videos from real production
+- Get to know the engineers
+- See the test set-up at the yard
+ 
+\subsection{Familiarize with the code base}
+- Read the code and try to see the bigger picture
+ 
+\subsection{Identify unreadable parts that need maintainability improvements}
+Halfway during the development a new standard for readable code has been introduced within Allseas. Parts of the old code have also been improved, but quite some code still needs a bit of restructuring
+- Identify the pieces of code that are least readable
+- Get to know the Allseas coding standard
+- Apply improvements along the way while working on following points
+ 
+\subsection{Create a profiler for the code to search for slow operations}
+- Identify the bottlenecks in the code
+ 
+\subsection{Find more efficient ways to perform the needed operations}
+- Depending on the type of bottleneck do something about
+ * memory allocation
+ * order of operations
+ * bug fixes for wrongly implemented algorithm logic
+ * precomputation of constant values
+ * optimize data locality 
+ 
+\subsection{Isolate parts of the mathematical model and test accuracy}
+- Create tests using generated data in Matlab
+- Run tests on recorded data from the test set-up
+- Test the resulting accuracy of the process in the test set-up
+ 
+\subsection{Expand the fitting model to increase the workability of the complete system}
+During pipelay there is more equipment present in and around the pipe. Being able to recognize more than just the pipes could help by predicting where the pipe will be before we can measure it. This will benefit the overall speed of the process.
+- Assist in the development of a new part of the recognition software that will find a ribbed cylinder (without slowing down the program)
+- Test the accuracy and reliability with the test set-up in the yard
+- Different kinds of line, plane and circle fitting algorithms based on minimization of geometric distances can be used for this

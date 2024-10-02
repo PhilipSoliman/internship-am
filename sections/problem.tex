@@ -1,0 +1,10 @@
+\section{Problem description}
+\label{sec:problem}
+During pipelay every few minutes a new pipe section must be fitted onto the end of the existing pipeline. For decades in the offshore industry this has been a manual process. Allseas is working on a method to automate this.
+ 
+To measure the pipe ends' position and orientation, 5 laser line scanners are used. These scanners scan in 5 different planes and each generate roughly 4000 (x, z) data points in their respective plane at 60~70 Hz. Within the clouds of data points the patterns representing the pipes are recognized, with the use of a line finding algorithm, derived from a Hough transform. The data of the 5 sensors is combined and the pipe ends are fitted in 3D with a combination of Newton-Raphson optimization and a least squares fit. All done in C++.
+ 
+The internship problem entails 3 aspects:
+- Improving code speed by searching for and eliminating slow operations
+- Improving accuracy by testing different fitting algorithms
+- Improving code maintainability

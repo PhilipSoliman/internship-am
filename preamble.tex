@@ -12,14 +12,73 @@
 % title 
 \makeatletter
 \renewcommand\maketitle{
-    {\raggedright % Note the extra {
+  {
+    \vspace*{3cm}
+    \raggedright % Note the extra {
     \begin{center}
     {\normalsize \sffamily \course }\\[2ex] 
     {\Large \bfseries \sffamily \@title }\\[2ex] 
     {\normalsize  \@author}\\[1ex]
     \@date\\[4ex]
-    \end{center}}} 
-\makeatother
+    \end{center}
+    \vspace*{1cm}
+    \begin{center}
+    \includegraphics[width=0.5\textwidth]{images/cover.jpg}
+    \end{center}
+  }
+
+  % TUD logo
+  {
+    \begin{tikzpicture}[remember picture, overlay]
+      \node[anchor=north west, inner sep=40pt] at (current page.north west) 
+      {\includegraphics[width=0.1\textwidth]{images/logo_TUD.png}};
+    \end{tikzpicture}
+  }
+
+  % Allseas logo
+  {
+    \begin{tikzpicture}[remember picture, overlay]
+      \node[anchor=north east, inner sep=40pt] at (current page.north east) 
+      {\includegraphics[width=0.1\textwidth]{images/logo_Allseas.png}};
+    \end{tikzpicture}
+  }
+  
+  % uni supervisor info text (bottom left)
+  {
+    \begin{tikzpicture}[remember picture, overlay]
+      \node[anchor=south west, inner sep=40pt] at (current page.south west) 
+      {
+          \begin{minipage}{0.5\textwidth}
+              \small
+              \textbf{University supervisor:} \\
+              \nameunisupervisor \\
+              \university \\
+              \faculty
+          \end{minipage}
+      };
+    \end{tikzpicture}
+  }
+
+  % company supervisor info text (bottom left)
+  {
+    \begin{tikzpicture}[remember picture, overlay]
+      \node[anchor=south east, inner sep=40pt] at (current page.south east) 
+      {          
+        \begin{minipage}{0.5\textwidth}
+            \small
+            \begin{flushright}
+              \textbf{Company supervisor:} \\
+              \namecompsupervisor \\
+              \role \\
+              \department
+            \end{flushright}
+        \end{minipage}
+
+      };
+    \end{tikzpicture}
+  }
+}
+\makeatother 
 
 % Multiple columns
 \usepackage{multicol}
@@ -39,22 +98,8 @@
 \usepackage[font=small,labelfont=bf]{caption}
 \usepackage{float}
 
-% Hyperlinks
-\usepackage{hyperref}
-\hypersetup{
-    colorlinks=true,
-    linkcolor=blue,
-    filecolor=magenta,      
-    urlcolor=cyan,
-    pdftitle={Overleaf Example},
-    pdfpagemode=FullScreen,
-    }
-\urlstyle{same}
-\usepackage{cleveref}
-
 % Appendices
 \usepackage{appendix}
-
 
 % Code listings
 \usepackage{listings}
@@ -149,6 +194,20 @@
 \fi
 \newcommand{\todo}[1]{\textcolor{blue}{\mynote{To do}{#1}}}
 
-% %bibliography
+%bibliography
 \usepackage[backend=biber, style=apa, citestyle=authoryear]{biblatex}
-\addbibresource{bibliography.bib}
+\addbibresource[type=file, glob,datatype=bibtex,location=local]{bibliograhy.bib}
+
+% Hyperlinks
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=blue,
+    citecolor=blue,
+    pdftitle={Overleaf Example},
+    pdfpagemode=FullScreen,
+    }
+\urlstyle{same}
+\usepackage{cleveref}

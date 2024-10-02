@@ -8,3 +8,7 @@ build/*.xml
 build/*.fdb_latexmk
 build/*.fls
 build/*.synctex.gz
+build/*synctex(busy)
+build/*.blg
+build/*.bbl
+build/sections
