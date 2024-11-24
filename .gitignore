@@ -10,5 +10,6 @@ build/*.fls
 build/*.synctex.gz
 build/*synctex(busy)
 build/*.blg
-build/*.bbl
+build/*.bbl*
 build/sections
+docs/

@@ -195,8 +195,9 @@
 \newcommand{\todo}[1]{\textcolor{blue}{\mynote{To do}{#1}}}
 
 % Bibliography
-\usepackage[backend=biber, style=apa, citestyle=authoryear]{biblatex}
+\usepackage[backend=biber, style=apa, citestyle=numeric-comp]{biblatex}
 \addbibresource[type=file, glob,datatype=bibtex,location=local]{bibliograhy.bib}
+\DeclareFieldFormat{url}{\href{#1}{\mkbibacro{URL}}} % URL's clickable
 
 % Hyperlinks
 \usepackage{hyperref}
@@ -209,5 +210,9 @@
   pdftitle={Overleaf Example},
   pdfpagemode=FullScreen,
 }
+
 \urlstyle{same}
 \usepackage{cleveref}
+
+\usepackage{subcaption}
+% \usepackage{subfig}
