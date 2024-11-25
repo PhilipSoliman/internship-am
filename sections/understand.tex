@@ -1,5 +1,5 @@
-\section{Understanding automated line up} \label{sec:understanding_automated_line_up}
-This section describes basic concepts of the automated line-up system. The automated line-up system is a system that aligns two pipes together. The system consists of a U-Frame, laser line scanners, Line up Car Assemblies (LCAs) and a sub-frame. The U-Frame houses the laser line scanners and is mounted on the sub-frame. The sub-frame is responsible for the U-Frame's movements. The LCAs are devices that control the new joint's position and orientation. The laser line scanners are sensors that detect the new joint's position. 
+\section{Understanding line up automation} \label{sec:understanding_automated_line_up}
+This section describes basic concepts of the line up automation (LUA) system. The automated line-up system is a system that aligns two pipes together. The system consists of a U-Frame, laser line scanners, Line up Car Assemblies (LCAs) and a sub-frame. The U-Frame houses the laser line scanners and is mounted on the sub-frame. The sub-frame is responsible for the U-Frame's movements. The LCAs are devices that control the new joint's position and orientation. The laser line scanners are sensors that detect the new joint's position.
 
 \subsection{The U-frame} \label{ssec:U-frame}
 Figure \ref{fig:U-frame} shows the U-Frame. The U-frame is a part of the automated line-up system. It is precisely machined to ensure that the positions of the laser line scanners are known as accurately as possible.
@@ -11,7 +11,7 @@ Figure \ref{fig:U-frame} shows the U-Frame. The U-frame is a part of the automat
 \end{figure}
 
 \subsection{Laser line scanners} \label{ssec:laser_line_scanners}
-The laserline scanners measure in 2 dimensions, width ($x$-direction) and height ($z$-direction). The scanners each generate 4192 data points in any one measurement. The frequency of the measurements in only limited by how fast the laser line scanner runs (see section \ref{ssec:code_flow}). The maximum scanning frequency of the lasers lies anywhere between 600 and 9000 Hz \cite{gocator2650datasheet}.
+The laserline scanners measure in 2 dimensions, width ($x$-direction) and depth ($z$-direction). The scanners each generate 4192 data points in any one measurement. The frequency of the measurements in only limited by how fast the laser line scanner runs (see section \ref{ssec:code_flow}). The maximum scanning frequency of the lasers lies anywhere between 600 and 9000 Hz \cite{gocator2650datasheet}.
 
 An important aspect of the laser line scanners is their Field of View (FOV).
 The FOV is the area in which the laser line scanners can detect objects. Figure \ref{fig:lls_fov} gives the FOV of the laser line scanners.
@@ -23,7 +23,7 @@ The FOV is the area in which the laser line scanners can detect objects. Figure 
 \end{figure}
 From figure \ref{fig:lls_fov} it can be seen that the FOV of the laser line scanners is limited. In particular, the width of the frame itself is $\sim 20$ cm, which means the laser line scanners can see $\sim 10$ cm beyond either side of the frame. This is why it is necessary for the U-Frame to move.
 
-Depending on the distance of an object to a laser line scanner, the accuracy its measurement can vary. For an object close to the laser line scanners the resolution is $47 \mu m$ in the $x$-direction. For an object further away from the laser line scanners the resolution is $104 \mu m$ in the $x$-direction \cite{gocator2650datasheet}. 
+Depending on the distance of an object to a laser line scanner, the accuracy its measurement can vary. For an object close to the laser line scanners the resolution is $47 \mu m$ in the $x$-direction. For an object further away from the laser line scanners the resolution is $104 \mu m$ in the $x$-direction \cite{gocator2650datasheet}.
 
 In terms of the $z$-direction, an indication of accuracy is given by the repeatability. This value is determined by using a flat target and calculating the 95\% confidence variation of the average height over 4096 measurement frames. $z$ values are averaged over the full FOV. The repeatability comes out to be $2 \mu m$ \cite{gocator2650datasheet}.
 
@@ -88,7 +88,7 @@ Not shown in the figure are the;
 \end{enumerate}
 
 \newpage
-\subsection{Flow of laser line scanner software} \label{ssec:code_flow}
+\subsection{Flow of line up automation software} \label{ssec:code_flow}
 The code flow of the laser line scanner software is shown in figure \ref{fig:code_flow}. This is an high-level
 overview of the software's operation.
 \begin{figure}[H]
@@ -106,4 +106,4 @@ As can be seen in figure \ref{fig:code_flow}, the laser line scanner software as
 Comparing Figures \ref{fig:oop_lua} and \ref{fig:code_flow}, it becomes clear that the relative activity of the various parts of the software change
 depending on the stage of the automated line-up process. For example, determining the location and geometry of a pipe's bevel is only necessary as soon as
 the new joint comes into Field of View (FOV) of the laser line scanners (step \ref{fig:oop_track}). Then, the activity roughly doubles as soon as the main line
-comes into FOV of the laser line scanners during final line up (step \ref{fig:oop_final_line_up}).
+comes into FOV of the laser line scanners during final line up (step \ref{fig:oop_final_line_up}). Furthermore, the finding of lines and their edges in each of the profile analyser threads becomes more computationally expensive for the ILUC ribs. This is further explored in section \ref{sec:profiler}.

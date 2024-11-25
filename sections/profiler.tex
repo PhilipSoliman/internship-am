@@ -1,1 +1,62 @@
 \section{Profiler} \label{sec:profiler}
+**Main change**: Add debug and symbol flags at compilation of objects and linking of main executable
+
+**Reason**: Adding these flags causes the (MSVC) compiler to generate symbol (for Windows .pdb) files, which are required by a (Microsoft) profiler.
+
+% Profiling with [VSDiagnostics](https://learn.microsoft.com/en-us/visualstudio/profiling/profile-apps-from-command-line?view=vs-2022)
+Microsoft Visual Studio (Community >= 2019, probably earlier versions as well) come with an installation of VSDiagnostics; a command-line profiling tool. VSDiagnostics generates *.diagsession files, which VS interprets and visualizes. For this reason, it is in my opinion more convenient to call VSDiagnostics indirectly (from within VS). Below I describe the steps to do this.
+
+% #### Configuring symbol file location
+We need to let VS know where it can find the symbol file corresponding to the csapp executable. To do this in VS go to Toolbar>Debug>Options>Debugging>Symbols and add the full path to "csapp.pdb" (without quotation marks). Note: it should be in the same folder as "csapp.exe"
+
+% #### Performance profiler
+Now we can start profiling:
+1. Go to: Toolbar>Debug>Perfomance Analyzer
+2. Set target to Executable
+3. Locate "csapp.exe" (optionally provide some CL-args)
+4. Check "CPU usage" (optionally change the sampling rate by clicking) %&#9881;)
+5. Check "start without collecting" to start csapp without immediately collecting profiling data
+6. Resume/pause profiling by clicking the "Record" button
+7. Stop profiling session by clicking the "Stop collecting" button
+
+% #### Guidelines
+Some general info on the \href{https://learn.microsoft.com/en-us/visualstudio/profiling/understanding-performance-collection-methods-perf-profiler?view=vs-2022}{concept of profiling}. Though \href{https://learn.microsoft.com/en-us/visualstudio/profiling/profiling-feature-tour?view=vs-2022}{this page} is more focused on solutions developed in VS itself it may still be useful to checkout for a more detailed decsription of VS' profiling capabilities. More info on some the \href{https://learn.microsoft.com/en-us/visualstudio/profiling/cpu-usage?view=vs-2022&source=recommendations#BKMK_Call_tree_data_columns}{CPU usage stats} that VS presents in its profiling reports. Lastly, Microsoft recommends to **\href{https://learn.microsoft.com/en-us/visualstudio/profiling/optimize-profiler-settings?view=vs-2022#trace-duration}{not exceed a trace duration of 5 min}**, as to limit analysis time.
+
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{|l|p{4cm}|p{2cm}|p{5cm}|}
+        \hline
+        \textbf{Phase}                    & \textbf{Description}                                                                                                                                                         & \textbf{Duration} & \textbf{Experimental Setup (Office)}                                                                                                           \\ \hline
+        \textbf{Joint recognition}     & LUA software detects joint as it moves towards mainline. U-Frame moves with joint after (successful) detection.                                                              & 5 to 10 s         & Flat surface resembling the joint (back of the ILUC-ribs mockup) is quickly brought into frame and subsequently kept still.                    \\ \hline
+        \textbf{ILUC ring recognition} & Joint and U-Frame move until ILUC ring is detected, after which partial line up takes place.                                                                                 & idem              & Next to the joint mockup, a second flat surface is brought into frame representing the ILUC-ring.                                              \\ \hline
+        \textbf{ILUC ribs recognition} & The ILUC-ring moves into the joint during the aforementioned partial line-up, after which the ILUC-ribs are detected. The joint is moved over the ribs towards the mainline. & idem              & A joint mockup (a side of the ILUC-ring mockup) is still in frame. A ILUC-ribs mockup is slowly moved into frame, revealing all 9 of its ribs. \\ \hline
+        \textbf{Final line up}         & The mainline gets detected and the joint is lined up with it.                                                                                                                & idem              & The joint mockup and a second flat surface (mainline mockup) are slowly moved together.                                                        \\ \hline
+    \end{tabular}
+    \caption{Experimental Phases and Setups}
+    \label{table:experimental_phases}
+\end{table}
+Additionally, every profiling test (trace) is approximately 20 seconds in length, in keeping with the profiling guidelines. Every trace is preceded by a 20 second "settling period" during which the LUA software runs, but no profiling or setup movement takes place. The profiling sampling rate is >=1000 Hz.
+
+Below we present the profiling results obtained during testing with the setup described. Shown are the "top functions" sorted by self-time, i.e. the functions that the CPU spends most time on, excluding time spent on subroutines/-functions.
+
+% #### [Phase 1: Joint recognition](lua_profiling/lua_profiling_phase1.diagsession)
+% ![phase 1: top functions](lua_profiling/lua_profiling_phase1_topfunctions.PNG)
+
+% #### [Phase 2: ILUC ring recognition](lua_profiling//lua_profiling_phase2.diagsession)
+% ![phase 2: top functions](lua_profiling/lua_profiling_phase2_topfunctions.PNG)
+
+% #### [Phase 3: ILUC ribs recognition](lua_profiling/lua_profiling_phase3.diagsession)
+% ![phase 3: top functions](lua_profiling/lua_profiling_phase3_topfunctions.PNG)
+
+% #### [Phase 4: Final line up](lua_profiling/lua_profiling_phase4.diagsession)
+% ![phase 4: top functions](lua_profiling/lua_profiling_phase4_topfunctions.PNG)
+
+We identify the following functions as bottlenecks:
+1. ```LineFinder::calculateNrPointsInEachBin```
+2. ```PointsIdentifier::gapToPreviousPointTooBig```
+4. pointer get operator:  ```->```
+3. ```LineFinder::calculateNrValidUnassignedPointsInEachBin```
+
+We add these functions to the above list of improvements.
+
+Additionally, we also find that that the perfomance is not hindered by GOCator's data acquisition time. That is to say, CPU resources spent on acquiring data from the GOCator system are negligable compared to our own source code. This improvement direction is subsquently closed.
