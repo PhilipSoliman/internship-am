@@ -1,37 +1,30 @@
 \section{Activities} \label{sec:activities}
-The activities that were performed during the internship are described in this section. The activities
-served to complete the steps described in section \nameref{sec:approach}.
+The activities that were performed during the internship are described in this section. The activities served to complete the steps described in section \nameref{sec:approach}.
 
 \subsection{The U-frame} \label{ssec:U-frame}
-Figure \ref{fig:U-frame} shows the U-Frame. The U-frame is a part of the automated line-up system. It is
-precisely machined to ensure that the positions of the laser line scanners are known as accurately as possible.
+Figure \ref{fig:U-frame} shows the U-Frame. The U-frame is a part of the automated line-up system. It is precisely machined to ensure that the positions of the laser line scanners are known as accurately as possible.
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.7\textwidth]{images/u_frame_lasers.png}
-    \caption{The U-Frame. Most importantly, the U-frame houses the 5 laser line scanners that are used to detect pipes and other
-        objects like the ILUC. The U-Frame is mounted on an interface frame, which in turn is mounted on the sub-frame (not visibile here).
-        The sub-frame is responsible for the U-Frame's movements.}
+    \caption{The U-Frame. Most importantly, the U-frame houses five laser line scanners that are used to detect pipes and other objects like the ILUC. The U-Frame is mounted on an interface frame, which in turn is mounted on the sub-frame (not visibile here). The sub-frame is responsible for the U-Frame's movements.}
     \label{fig:U-frame}
 \end{figure}
+The laserline scanners measure in 2 dimensions, width ($x$-direction) and height ($z$-direction). The scanners each generate 4192 data points in any one measurement. The frequency of the measurements in only limited by how fast the laser line scanner runs (see section \ref{ssec:code_flow}). The maximum scanning frequency of the lasers lies anywhere between 600 and 9000 Hz \cite{gocator2650datasheet}.
+
 An important aspect of the laser line scanners is their Field of View (FOV).
-The FOV is the area in which the laser line scanners can detect objects. Figure \ref{fig:lls_fov} gives the FOV
-of the laser line scanners.
+The FOV is the area in which the laser line scanners can detect objects. Figure \ref{fig:lls_fov} gives the FOV of the laser line scanners.
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\textwidth]{images/laser_line_scanner_fov.png}
     \caption{Field of View (FOV) of the laser line scanners. Measurements are in millimeters \cite{gocator2650FOV}.}
     \label{fig:lls_fov}
 \end{figure}
-From figure \ref{fig:lls_fov} it can be seen that the FOV of the laser line scanners is limited. In particular,
-the width of the frame itself is $\sim 20$ cm, which means the laser line scanners can see $\sim 10$ cm beyond either
-side of the frame. This is why it is necessary for the U-Frame to move.
+From figure \ref{fig:lls_fov} it can be seen that the FOV of the laser line scanners is limited. In particular, the width of the frame itself is $\sim 20$ cm, which means the laser line scanners can see $\sim 10$ cm beyond either side of the frame. This is why it is necessary for the U-Frame to move.
 
-\subsubsection{accuracy of the laser line scanners}
-Depending on how far an object is from the laser line scanners, the accuracy of the measurements can vary. For an object close
-to the laser line scanners the resolution is $47 \mu m$ in the $x$-direction. For an object
-further away from the laser line scanners the resolution is $94 \mu m$ in the $x$-direction. In general the accuracy is
-$2 \mu m$ in the $z$-direction \cite{gocator2650accuracy}.
+\subsubsection{Accuracy of the laser line scanners} \label{sssec:lls_accuracy}
+Depending on the distance of an object to a laser line scanner, the accuracy its measurement can vary. For an object close to the laser line scanners the resolution is $47 \mu m$ in the $x$-direction. For an object further away from the laser line scanners the resolution is $104 \mu m$ in the $x$-direction \cite{gocator2650datasheet}. 
 
+In terms of the $z$-direction, an indication of accuracy is given by the repeatability. This value is determined by using a flat target and calculating the 95\% confidence variation of the average height over 4096 measurement frames. $z$ values are averaged over the full FOV. The repeatability comes out to be $2 \mu m$ \cite{gocator2650datasheet}.
 
 \newpage
 \subsection{Order of operations automated line-up} \label{ssec:oop_lua}
@@ -107,12 +100,7 @@ overview of the software's operation.
         the main thread can call functions. The main thread is responsible for the initialisation of the software and the creation of the other threads.}
     \label{fig:code_flow}
 \end{figure}
-As can be seen in figure \ref{fig:code_flow}, the laser line scanner software assigns a seperate thread for the analysis of the data coming from
-each of the 5 laser line scanners. These analyser threads are responsible for finding line-segments, edge points and pipe bevels in their respective 2-dimensional
-data sets. Once this preliminary, disjoint analysis is done, the main thread combines this processed data into a 3-dimensional model of the ILUC ribs, -ring and/or pipes.
-Specifically, the models for the pipes are used to calculate the high-low values of the gap between the new joint and the main line.
-The high-low values determine if the pipes are lined-up correctly. If the gap is within a certain tolerance, the software will signal that
-the pipes are aligned and it terminates the main loop.
+As can be seen in figure \ref{fig:code_flow}, the laser line scanner software assigns a seperate thread for the analysis of the data coming from each of the five laser line scanners. These analyser threads are responsible for finding line-segments, edge points and pipe bevels in their respective 2-dimensional data sets. Once this preliminary, disjoint analysis is done, the main thread combines the processed data into a 3-dimensional model of the ILUC ribs, -ring and/or pipes. Specifically, the models for the pipes are used to calculate the high-low values of the gap between the new joint and the main line. The high-low values determine if the pipes are lined-up correctly. If the gap is within a certain tolerance, the software will signal that the pipes are aligned and it terminates the main loop.
 
 Comparing Figures \ref{fig:oop_lua} and \ref{fig:code_flow}, it becomes clear that the relative activity of the various parts of the software change
 depending on the stage of the automated line-up process. For example, determining the location and geometry of a pipe's bevel is only necessary as soon as
