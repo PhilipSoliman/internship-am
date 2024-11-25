@@ -8,27 +8,23 @@ This includes understanding the hardware, the software and the mathematical mode
 Next to that, getting to know the engineers that work on the project and the test set-up at the yard is also important.
 All of this provides a wholisitc view of the system, which in turn highlights the signifigance of the improvements described
 in Section \ref{ssec:intern_goals}.
+\begin{flushright}
+    \large\texttwemoji{open book} section \cref{ssec:U-frame,ssec:laser_line_scanners,ssec:oop_lua}
+\end{flushright}
 
 \subsection{Familiarize with the code base} \label{ssec:familiarize_code}
 Read the code starting form the lowest level functions reading in the data received rom the laser line scanners to
 the highest level functions that combine the processed data to fit the pipe ends.
 \begin{flushright}
-    $\rightarrow$ internship goal \ref{ssec:intern_goals} \textbf{a}
-\end{flushright}
-
-\subsection{Identify unreadable code} \label{ssec:unreadable_code}
-Halfway during the development between 2017 and the time of this internship a new standard for clean, readable code has been
-introduced within Allseas. Parts of the old code have also been improved, but quite some code still needs a bit of restructuring.
-This step serves to identify the pieces of code that are least readable and need to be updated to the new Allseas coding standard.
-\begin{flushright}
-    $\rightarrow$ internship goal \ref{ssec:intern_goals} \textbf{a}
+    \large\texttwemoji{open book} section \ref{ssec:code_flow}
 \end{flushright}
 
 \subsection{Create a profiler for the code} \label{ssec:profiler}
 The best way to improve code speed is to know where the bottlenecks are. A profiler will help to identify these bottlenecks. Focusing
 on the most time consuming parts of the code prevents wasting resources on speeding up parts of the code that are not used often.
 \begin{flushright}
-    $\rightarrow$ internship goal \ref{ssec:intern_goals} \textbf{b}
+     \texttwemoji{check mark button} internship goal \ref{ssec:intern_goals} \textbf{a}\\
+     \large\texttwemoji{open book} section \ref{sec:profiler}
 \end{flushright}
 
 \subsection{Optimize the code} \label{ssec:optimize_code}
@@ -36,7 +32,17 @@ Once the major bottlenecks are identified, the next step is to find more efficie
 may involve reducing memory allocation, re-ordering operations, correcting or updating algorithms, implenting precomputation of constant values
 or optimising data locality.
 \begin{flushright}
-    $\rightarrow$ internship goal \ref{ssec:intern_goals} \textbf{b}
+     \texttwemoji{check mark button} internship goal \ref{ssec:intern_goals} \textbf{a}\\
+     \large\texttwemoji{open book} section \ref{sec:optimize}
+\end{flushright}
+
+\subsection{Identify unreadable code} \label{ssec:unreadable_code}
+Halfway during the development between 2017 and the time of this internship a new standard for clean, readable code has been
+introduced within Allseas. Parts of the old code have also been improved, but quite some code still needs a bit of restructuring.
+This step serves to identify the pieces of code that are least readable and need to be updated to the new Allseas coding standard.
+\begin{flushright}
+    \texttwemoji{check mark button} internship goal \ref{ssec:intern_goals} \textbf{b}\\
+    \large\texttwemoji{open book} sections \ref{sec:optimize}
 \end{flushright}
 
 \subsection{Determine and improve upon current accuracy} \label{ssec:test_accuracy}
@@ -45,7 +51,8 @@ This will help to determine if the new algorithms are more accurate than the old
 with recorded data from the test set-up to see if the new algorithms are also more reliable. Finally,
 test the algorithms on the real-time data from the test set-up to see if the new algorithms are also faster.
 \begin{flushright}
-    $\rightarrow$ internship goal \ref{ssec:intern_goals} \textbf{c}
+     \texttwemoji{check mark button} internship goal \ref{ssec:intern_goals} \textbf{c}\\
+     \large\texttwemoji{open book} section \ref{sec:accuracy}
 \end{flushright}
 
 \subsection{Expand the fitting model to recognise ILUC} \label{ssec:expand_model}
@@ -72,5 +79,6 @@ a combination of different kinds of line, plane and circle fitting algorithms ba
 be used for this. Lastly, Where pipe ends tend to have deformations due to manufacturing, pre-heating or bevelling,
 the ILUC is a near-perfect cylinder with a defined radius. This can be used to improve the accuracy of the fitting algorithms.
 \begin{flushright}
-    $\rightarrow$ internship goal \ref{ssec:intern_goals} \textbf{c}
+    \texttwemoji{check mark button} internship goal \ref{ssec:intern_goals} \textbf{c}\\
+    \large\texttwemoji{open book} section \ref{sec:iluc_recognition}
 \end{flushright}
