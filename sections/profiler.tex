@@ -1,62 +1,52 @@
 \section{Profiler} \label{sec:profiler}
-**Main change**: Add debug and symbol flags at compilation of objects and linking of main executable
+This section describes the use of a profiler to identify bottlenecks in the LUA software. The profiler is used to identify functions that consume a lot of CPU time, and thus are candidates for optimization.
 
-**Reason**: Adding these flags causes the (MSVC) compiler to generate symbol (for Windows .pdb) files, which are required by a (Microsoft) profiler.
+Microsoft Visual Studio (VS) comes with an installation of VSDiagnostics; a command-line profiling tool \cite{vsdiagnostics}. VSDiagnostics generates *.diagsession files, which VS interprets and visualizes. For this reason, it is more convenient to call VSDiagnostics indirectly from within Visual Studio.
 
-% Profiling with [VSDiagnostics](https://learn.microsoft.com/en-us/visualstudio/profiling/profile-apps-from-command-line?view=vs-2022)
-Microsoft Visual Studio (Community >= 2019, probably earlier versions as well) come with an installation of VSDiagnostics; a command-line profiling tool. VSDiagnostics generates *.diagsession files, which VS interprets and visualizes. For this reason, it is in my opinion more convenient to call VSDiagnostics indirectly (from within VS). Below I describe the steps to do this.
+To do this, debug and symbol flags need to be added to the compilation commands of object files and final linking of the main executable. Adding these flags ensures the compiler generates symbol (for Windows .pdb) files, which are required by any profiler.
 
-% #### Configuring symbol file location
-We need to let VS know where it can find the symbol file corresponding to the csapp executable. To do this in VS go to Toolbar>Debug>Options>Debugging>Symbols and add the full path to "csapp.pdb" (without quotation marks). Note: it should be in the same folder as "csapp.exe"
+The VS profiler discerns between two categories of CPU time: self-time and total time. Self-time is the time spent in a function, excluding time spent in subroutines/-functions. Total time is the time spent in a function, including time spent in subroutines/-functions \cite{cpu_usage}. The self time is expressed as
+\begin{equation}
+    \text{self-time} = \frac{\text{CPU time spent in the function}}{\text{total execution time}} \times 100\%.
+    \label{eq:self_time}
+\end{equation}
 
-% #### Performance profiler
-Now we can start profiling:
-1. Go to: Toolbar>Debug>Perfomance Analyzer
-2. Set target to Executable
-3. Locate "csapp.exe" (optionally provide some CL-args)
-4. Check "CPU usage" (optionally change the sampling rate by clicking) %&#9881;)
-5. Check "start without collecting" to start csapp without immediately collecting profiling data
-6. Resume/pause profiling by clicking the "Record" button
-7. Stop profiling session by clicking the "Stop collecting" button
+\subsection{Profiling test setup}
+Profiling measurements are done in a controlled environment, where the LUA software is run with one laser line scanner. The scanner is placed in front of a test setup consisting of a lone ILUC ring, a mockup for the ILUC ribs and new joint.
 
-% #### Guidelines
-Some general info on the \href{https://learn.microsoft.com/en-us/visualstudio/profiling/understanding-performance-collection-methods-perf-profiler?view=vs-2022}{concept of profiling}. Though \href{https://learn.microsoft.com/en-us/visualstudio/profiling/profiling-feature-tour?view=vs-2022}{this page} is more focused on solutions developed in VS itself it may still be useful to checkout for a more detailed decsription of VS' profiling capabilities. More info on some the \href{https://learn.microsoft.com/en-us/visualstudio/profiling/cpu-usage?view=vs-2022&source=recommendations#BKMK_Call_tree_data_columns}{CPU usage stats} that VS presents in its profiling reports. Lastly, Microsoft recommends to **\href{https://learn.microsoft.com/en-us/visualstudio/profiling/optimize-profiler-settings?view=vs-2022#trace-duration}{not exceed a trace duration of 5 min}**, as to limit analysis time.
-
-\begin{table}[h!]
+\begin{figure}[H]
+    \begin{subfigure}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/ILUC_ring.jpeg}
+        \caption{ILUC ring.}
+    \end{subfigure}
+    \begin{subfigure}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/ILUC_ribs_mockup.jpeg}
+        \caption{ILUC ribs.}
+    \end{subfigure}
     \centering
-    \begin{tabular}{|l|p{4cm}|p{2cm}|p{5cm}|}
-        \hline
-        \textbf{Phase}                    & \textbf{Description}                                                                                                                                                         & \textbf{Duration} & \textbf{Experimental Setup (Office)}                                                                                                           \\ \hline
-        \textbf{Joint recognition}     & LUA software detects joint as it moves towards mainline. U-Frame moves with joint after (successful) detection.                                                              & 5 to 10 s         & Flat surface resembling the joint (back of the ILUC-ribs mockup) is quickly brought into frame and subsequently kept still.                    \\ \hline
-        \textbf{ILUC ring recognition} & Joint and U-Frame move until ILUC ring is detected, after which partial line up takes place.                                                                                 & idem              & Next to the joint mockup, a second flat surface is brought into frame representing the ILUC-ring.                                              \\ \hline
-        \textbf{ILUC ribs recognition} & The ILUC-ring moves into the joint during the aforementioned partial line-up, after which the ILUC-ribs are detected. The joint is moved over the ribs towards the mainline. & idem              & A joint mockup (a side of the ILUC-ring mockup) is still in frame. A ILUC-ribs mockup is slowly moved into frame, revealing all 9 of its ribs. \\ \hline
-        \textbf{Final line up}         & The mainline gets detected and the joint is lined up with it.                                                                                                                & idem              & The joint mockup and a second flat surface (mainline mockup) are slowly moved together.                                                        \\ \hline
-    \end{tabular}
-    \caption{Experimental Phases and Setups}
-    \label{table:experimental_phases}
-\end{table}
-Additionally, every profiling test (trace) is approximately 20 seconds in length, in keeping with the profiling guidelines. Every trace is preceded by a 20 second "settling period" during which the LUA software runs, but no profiling or setup movement takes place. The profiling sampling rate is >=1000 Hz.
+    \begin{subfigure}{0.9\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/test_setup.png}
+        \caption{Full setup. Note, laser is not connected}
+    \end{subfigure}
+    \caption{The experimental setup for profiling measurements.}
+\end{figure}
 
-Below we present the profiling results obtained during testing with the setup described. Shown are the "top functions" sorted by self-time, i.e. the functions that the CPU spends most time on, excluding time spent on subroutines/-functions.
 
-% #### [Phase 1: Joint recognition](lua_profiling/lua_profiling_phase1.diagsession)
-% ![phase 1: top functions](lua_profiling/lua_profiling_phase1_topfunctions.PNG)
+These objects are moved in a controlled manner to simulate the phased of LUA. The experimental setup is described in Table \ref{tab:experimental_phases}.
 
-% #### [Phase 2: ILUC ring recognition](lua_profiling//lua_profiling_phase2.diagsession)
-% ![phase 2: top functions](lua_profiling/lua_profiling_phase2_topfunctions.PNG)
+\input{tables/profiling.tex}
 
-% #### [Phase 3: ILUC ribs recognition](lua_profiling/lua_profiling_phase3.diagsession)
-% ![phase 3: top functions](lua_profiling/lua_profiling_phase3_topfunctions.PNG)
+Every profiling test (trace) is approximately 20 seconds in length, in keeping with the profiling guidelines. Every trace is preceded by a 20 second "settling period" during which the LUA software runs, but no profiling or setup movement takes place. The profiling sampling rate is >=1000 Hz.
 
-% #### [Phase 4: Final line up](lua_profiling/lua_profiling_phase4.diagsession)
-% ![phase 4: top functions](lua_profiling/lua_profiling_phase4_topfunctions.PNG)
+\subsection{Profiling results}
+Shown in Table \ref{tab:profiling_results} are the most time consuming functions per LUA phase. 
 
-We identify the following functions as bottlenecks:
-1. ```LineFinder::calculateNrPointsInEachBin```
-2. ```PointsIdentifier::gapToPreviousPointTooBig```
-4. pointer get operator:  ```->```
-3. ```LineFinder::calculateNrValidUnassignedPointsInEachBin```
+\input{tables/profiling_results.tex}
 
-We add these functions to the above list of improvements.
+The results show that the function \lstinline[language=c]|LineFinder::calculateNrPointsInEachBin| is the most time consuming function in all phases. This function is clearly a bottleneck and should be optimized. 
 
-Additionally, we also find that that the perfomance is not hindered by GOCator's data acquisition time. That is to say, CPU resources spent on acquiring data from the GOCator system are negligable compared to our own source code. This improvement direction is subsquently closed.
+As mentioned in section \ref{ssec:code_flow}, recognition of the ILUC ribs is the most time consuming phase. This can be attributed to the ILUC ribs consisting of many smaller line segments. The Hough transform function executed in each of the profile analyser threads in figure
+\ref{fig:code_flow} is ran for each of these line segments. This in turn results in many calls to the function \lstinline[language=c]|LineFinder::calculateNrPointsInEachBin|, which is a part of the Hough transform.

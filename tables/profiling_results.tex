@@ -1,0 +1,15 @@
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|p{4cm}|p{7cm}|p{2.5cm}|}
+        \hline
+        \textbf{Phase}             & \textbf{Top function}                                          & \textbf{self-time (\%)} \\ \hline
+        \textbf{Joint recognition} & \lstinline[language=c]|LineFinder::calculateNrPointsInEachBin| & 13.94                    \\ \hline
+        \textbf{ILUC ring recogni-
+        tion}                      & \lstinline[language=c]|LineFinder::calculateNrPointsInEachBin| & 17.89                   \\ \hline
+        \textbf{ILUC ribs recogni-
+        tion}                      & \lstinline[language=c]|LineFinder::calculateNrPointsInEachBin| & 18.53                  \\ \hline
+        \textbf{Final line up}     & \lstinline[language=c]|LineFinder::calculateNrPointsInEachBin| & 15.87                   \\ \hline
+    \end{tabular}
+    \caption{Profiling results.}
+    \label{tab:profiling_results}
+\end{table}

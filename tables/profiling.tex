@@ -1,0 +1,17 @@
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|p{4cm}|p{5.5cm}|p{5cm}|}
+        \hline
+        \textbf{Phase}& \textbf{Description} & \textbf{Experimental Setup} \\ \hline
+
+        \textbf{\ref{fig:oop_track} Joint recognition} & LUA software detects joint as it moves towards mainline. U-Frame moves with joint after (successful) detection. & Flat surface resembling the joint (back of the ILUC-ribs mockup) is quickly brought into frame and subsequently kept still.\\ \hline
+
+        \textbf{\ref{fig:oop_ILUC_ring} ILUC ring recognition} & Joint and U-Frame move until ILUC ring is detected, after which partial line up takes place. & Next to the joint mockup, the side of the ILUC ring is brought into frame representing the ILUC-ring.\\ \hline
+
+        \textbf{\ref{fig:oop_ILUC_ribs} ILUC ribs recognition} & The ILUC-ring moves into the joint during the aforementioned partial line-up, after which the ILUC-ribs are detected. The joint is moved over the ribs towards the mainline. & A joint mockup (a side of the ILUC-ring mockup) is still in frame. The ILUC ribs mockup is slowly moved into frame, revealing all its ribs. \\ \hline
+
+        \textbf{\ref{fig:oop_final_line_up} Final line up}  & The mainline gets detected and the joint is lined up with & The joint mockup and a second flat surface (mainline mockup) are slowly moved together. \\ \hline
+    \end{tabular}
+    \caption{Profiling experiments simulating essentials phases of LUA. The duration of each phase is an approximation. Each of the experiments are performed with one laser line scanner and done on a standard company PC (HP Z4 G4).}
+    \label{tab:experimental_phases}
+\end{table}
