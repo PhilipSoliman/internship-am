@@ -39,14 +39,28 @@ These objects are moved in a controlled manner to simulate the phased of LUA. Th
 
 \input{tables/profiling.tex}
 
-Every profiling test (trace) is approximately 20 seconds in length, in keeping with the profiling guidelines. Every trace is preceded by a 20 second "settling period" during which the LUA software runs, but no profiling or setup movement takes place. The profiling sampling rate is >=1000 Hz.
+Every profiling test is approximately 20 seconds in length, in keeping with the profiling guidelines. Every test is preceded by a 20 second settling period during which the LUA software runs, but no profiling or setup movement takes place. The profiling sampling rate is >=1000 Hz.
 
-\subsection{Profiling results}
-Shown in Table \ref{tab:profiling_results} are the most time consuming functions per LUA phase. 
+\subsection{Profiling results} \label{ssec:profiling_results}
+Shown in Table \ref{tab:profiling_results} are the most time consuming functions per LUA phase.
 
 \input{tables/profiling_results.tex}
 
-The results show that the function \lstinline[language=c]|LineFinder::calculateNrPointsInEachBin| is the most time consuming function in all phases. This function is clearly a bottleneck and should be optimized. 
+The results show that the function \lstinline[language=c]|LineFinder::calculateNrPointsInEachBin| is the most time consuming function in all phases. This function is a bottleneck and is a target for optimization.
 
 As mentioned in section \ref{ssec:code_flow}, recognition of the ILUC ribs is the most time consuming phase. This can be attributed to the ILUC ribs consisting of many smaller line segments. The Hough transform function executed in each of the profile analyser threads in figure
 \ref{fig:code_flow} is ran for each of these line segments. This in turn results in many calls to the function \lstinline[language=c]|LineFinder::calculateNrPointsInEachBin|, which is a part of the Hough transform.
+
+Figure \ref{fig:profiling_bottleneck} shows profiling results of parts of the bottleneck function
+\begin{figure}[H]
+    \includegraphics[width=\textwidth]{images/profiling_bottleneck.png}
+    \caption{Profiling results of the function \lstinline[language=c]|LineFinder::calculateNrPointsInEachBin| during the ILUC ribs recognition phase.}
+    \label{fig:profiling_bottleneck}
+\end{figure}
+
+From figure \ref{fig:profiling_bottleneck} it becomes clear what the most time consuming operations are in the calculation of the Hough transform. In order of most time consuming to least, these are:
+\begin{enumerate}
+    \item Checking if a data point is not already associated to a line (\textbf{line 89 in figure \ref{fig:profiling_bottleneck}});
+    \item Calculating the distance between a data point the laser line scanner's origin (\textbf{line 93 in figure \ref{fig:profiling_bottleneck}});
+    \item  Determining in which distance bin a data point falls (\textbf{line 100 in figure \ref{fig:profiling_bottleneck}}).
+\end{enumerate}

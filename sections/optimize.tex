@@ -1,3 +1,3 @@
 \section{Optimize \& refactor code} \label{sec:optimize} 
-
-\todo{talk about precalculating sin and cosine values, }
+In section \ref{ssec:profiling_results} it is shown that the function \lstinline[language=c]|LineFinder::calculateNrPointsInEachBin| is the most time consuming function in all phases of the LUA software. This function is part of the Hough transform that is performed in each of the profiler
+analyser threads in figure \ref{fig:code_flow}. 
