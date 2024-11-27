@@ -28,7 +28,7 @@ The geometric circle fit has both bias and (co-)variance. under the assumption t
 \end{equation}
 and therefore the bias exists only in the radius estimate as $\text{E}[\Delta_1 R] =\frac{2s^2}{\tilde{R}}$. The (co-)variance is given as
 \begin{equation}
-    \text{cov}(\Delta_1 Q) = s^2 (W^T W)^{-1} \quad \text{\cite[equation 8.12]{alsharadqah_chernov_circle_fitting}}.
+    \text{cov}[\Delta_1 Q] = s^2 (W^T W)^{-1} \quad \text{\cite[equation 8.12]{alsharadqah_chernov_circle_fitting}}.
     \label{eq:circle_fit_variance}
 \end{equation}
 
@@ -37,20 +37,21 @@ Taking the diagonal elements of the covariance matrix gives the variance of the 
 It remains to estimate the noise level $s$ in the data and the true angles $\phi_i$ for all $i$. From section \ref{ssec:laser_line_scanners} it is known that the resolution of the laser line scanners is $47 \mu m$ to $104 \mu m$ in the $x$-direction and $2 \mu$ in the $z$-direction. This suggests that the noise level $s$ is on the order of $10^{-4}$ m. This is a rough estimate, but it is sufficient for the purposes of this discussion. As stated in the previous section \ref{ssec:statistical_model}, the true angles correspond to the angle of the laser line scanner in the U-frame.
 
 Using the above circle fit accuracy can be calculated for the idealised scenario where a 24-inch (= 0.5 m) pipe is exactly in the center of the U-frame with zero pitch or yaw. In this case
+\todo{check angles, possible recalculate result below}
 \begin{align*}
     \tilde{a} & = \tilde{b} = 0, \quad \tilde{R} = 0.5 \ [m], \\
-    \phi_1    & = -\frac{\pi}{4},                       \\
-    \phi_2    & = \frac{\pi}{4},                        \\
-    \phi_3    & =  \frac{5\pi}{8},                      \\
-    \phi_4    & = -\frac{5\pi}{8},                      \\
+    \phi_1    & = -\frac{\pi}{4},                             \\
+    \phi_2    & = \frac{\pi}{4},                              \\
+    \phi_3    & =  \frac{5\pi}{8},                            \\
+    \phi_4    & = -\frac{5\pi}{8},                            \\
     \phi_5    & = \pi,
 \end{align*}
 where the angles are measured from the $z$-axis in the $y$-$z$ plane with positive rotation defined by the right hand rule applied to the $x$-axis. In this simple case the angles are the same as the angles of the laser line scanners in the U-frame.
 
-Substituting this into the formulae \cref{eq:circle_fit_bias,eq:circle_fit_variance} above gives
+Substituting this into \cref{eq:circle_fit_bias,eq:circle_fit_variance} above gives
 \begin{align*}
-    \text{E}[\Delta_1 R]   & =,                                   \\
-    s(a)  & = \sqrt{(\text{cov}(\Delta_1 Q))_{11}} = , \\
-    \text{cov}(\Delta_1 b) & = \sqrt{(\text{cov}(\Delta_1 Q))_{22}} = , \\
-    \text{cov}(\Delta_1 R) & = \sqrt{(\text{cov}(\Delta_1 Q))_{33}} = .
+    \text{E}[\Delta_1 R] & = 0.04 \mu \text{m},                                     \\
+    s[a]                 & = \sqrt{(\text{cov}[\Delta_1 Q])_{11}} = 0.07 \ \text{mm}, \\
+    s[b]                 & = \sqrt{(\text{cov}[\Delta_1 Q])_{22}} = 0.06 \ \text{mm}, \\
+    s[R]                 & = \sqrt{(\text{cov}[\Delta_1 Q])_{33}} = 0.04 \ \text{mm}.
 \end{align*}
