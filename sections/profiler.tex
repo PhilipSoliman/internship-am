@@ -59,8 +59,8 @@ Figure \ref{fig:profiling_bottleneck} shows profiling results of parts of the bo
 \end{figure}
 
 From figure \ref{fig:profiling_bottleneck} it becomes clear what the most time consuming operations are in the calculation of the Hough transform. In order of most time consuming to least, these are:
-\begin{enumerate}
-    \item Checking if a data point is not already associated to a line (\textbf{line 89 in figure \ref{fig:profiling_bottleneck}});
-    \item Calculating the distance between a data point the laser line scanner's origin (\textbf{line 93 in figure \ref{fig:profiling_bottleneck}});
-    \item  Determining in which distance bin a data point falls (\textbf{line 100 in figure \ref{fig:profiling_bottleneck}}).
+\begin{enumerate}[label=\textbf{B.N. \arabic*},ref=Bottle Neck \arabic*]
+    \item \label{bottlen:line_assocation} Checking if a data point is not already associated to a line (\textbf{line 89 in figure \ref{fig:profiling_bottleneck}});
+    \item \label{bottlen:calc_distance} Calculating the distance between a data point and the laser line scanner's origin (\textbf{line 93 in figure \ref{fig:profiling_bottleneck}});
+    \item \label{bottlen:bin_assocation}  Determining in which distance bin a data point falls (\textbf{line 100 in figure \ref{fig:profiling_bottleneck}}).
 \end{enumerate}
