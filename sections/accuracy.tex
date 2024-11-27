@@ -1,7 +1,7 @@
 \section{Accuracy of circle fits} \label{sec:accuracy}
 This section gives a mathematical estimate for the accuracy of circle fit algorithms that minimize geometric distances. This is useful knowlegde for LUA, since this kind of `geometric circle fit' algorithm is used to form a 3-dimensional representation of the pipes, among other things (section \ref{ssec:code_flow}). This discussion then ends with the implementation in the LUA software of a new kind of circle fit algrorithm that has a variance that is the same as the least squares method, but no bias in its estimation of the circle radius. This section builds on the methods described in the paper by \citeauthor{alsharadqah_chernov_circle_fitting} \cite{alsharadqah_chernov_circle_fitting}.
 
-\subsection{Statistical model}
+\subsection{Statistical model}\label{ssec:statistical_model}
 In order to estimate the accuracy of a circle fit, we need to define a statistical model for the error in the input. To that end, we assume that the data points $(x_i, y_i)$ are noisy observations of the true points $(\tilde{x}_i, \tilde{y}_i)$, where the noise is i.i.d. normally distributed with bias 0 and variance $s^2$ \cite[section 2]{alsharadqah_chernov_circle_fitting}.
 \begin{equation}
     x_i = \tilde{x}_i + \delta x_i, \quad y_i = \tilde{y}_i + \delta y_i, \quad \delta x_i, \delta y_i \sim N(0, s^2).
@@ -9,7 +9,7 @@ In order to estimate the accuracy of a circle fit, we need to define a statistic
 
 This gives that the true points must lie on a circle, satisfying the equation
 \begin{equation}
-    (\tilde{x}_i - \tilde{a})^2 + (\tilde{y}_i - \tilde{b})^2 = \tilde{R}^2 \quad \text{for all } i, \text{ some midpoint } (\tilde{a}, \tilde{b}) \text{ and some radius } \tilde{R}.
+    (\tilde{x}_i - \tilde{a})^2 + (\tilde{y}_i - \tilde{b})^2 = \tilde{R}^2 \quad \text{for} i = 1, \dots, n, \text{ midpoint } (\tilde{a}, \tilde{b}) \text{ and radius } \tilde{R}.
 \end{equation}
 
 In the case of LUA the angles of the laser line scanners in the U-frame are known (section \ref{ssec:laser_line_scanners}). This suggests normalisation of the data points to the unit circle, which is done by
@@ -21,13 +21,36 @@ where $\phi_i$ is the angle corresponding to the true point $(\tilde{x}_i, \tild
 Define the vector of estimates $Q = (a, b, r)^T$ for the circle parameters. Then, the first order terms in the Taylor expansion of $Q$ in terms of $\delta x_i, \delta y_i$ is denoted by $\Delta_1Q$. The accuracy of the circle fit can then be estimated by the variance of $\Delta_1Q$ \cite[section 2]{alsharadqah_chernov_circle_fitting}.
 
 \subsection{Accuracy estimation}
-The geometric circle fit has both bias and (co-)variance. The bias is given by
+The geometric circle fit has both bias and (co-)variance. under the assumption that the number of data points approaches infinity $n \rightarrow \infty$, the bias is given by
 \begin{equation}
     \text{E}[\Delta_1 Q] = \frac{2s^2}{\tilde{R}} \begin{pmatrix} 0 \\ 0 \\ 1 \end{pmatrix} \quad \text{\cite[equation 6.14]{alsharadqah_chernov_circle_fitting}},
+    \label{eq:circle_fit_bias}
 \end{equation}
-and therefore the bias exists only in the radius estimate as $\frac{2s^2}{\tilde{R}}$. The (co-)variance is given as
+and therefore the bias exists only in the radius estimate as $\text{E}[\Delta_1 R] =\frac{2s^2}{\tilde{R}}$. The (co-)variance is given as
 \begin{equation}
     \text{cov}(\Delta_1 Q) = s^2 (W^T W)^{-1} \quad \text{\cite[equation 8.12]{alsharadqah_chernov_circle_fitting}}.
+    \label{eq:circle_fit_variance}
 \end{equation}
 
-Taking the diagonal elements of the covariance matrix gives the variance of the estimates for the circle parameters. 
+Taking the diagonal elements of the covariance matrix gives the variance of the estimates for the circle parameters. Taking the square root of these variances gives the standard deviation $s(\cdot)$ of the estimates. The latter is good indicator of the accuracy of the circle fit.
+
+It remains to estimate the noise level $s$ in the data and the true angles $\phi_i$ for all $i$. From section \ref{ssec:laser_line_scanners} it is known that the resolution of the laser line scanners is $47 \mu m$ to $104 \mu m$ in the $x$-direction and $2 \mu$ in the $z$-direction. This suggests that the noise level $s$ is on the order of $10^{-4}$ m. This is a rough estimate, but it is sufficient for the purposes of this discussion. As stated in the previous section \ref{ssec:statistical_model}, the true angles correspond to the angle of the laser line scanner in the U-frame.
+
+Using the above circle fit accuracy can be calculated for the idealised scenario where a 24-inch (= 0.5 m) pipe is exactly in the center of the U-frame with zero pitch or yaw. In this case
+\begin{align*}
+    \tilde{a} & = \tilde{b} = 0, \quad \tilde{R} = 0.5 \ [m], \\
+    \phi_1    & = -\frac{\pi}{4},                       \\
+    \phi_2    & = \frac{\pi}{4},                        \\
+    \phi_3    & =  \frac{5\pi}{8},                      \\
+    \phi_4    & = -\frac{5\pi}{8},                      \\
+    \phi_5    & = \pi,
+\end{align*}
+where the angles are measured from the $z$-axis in the $y$-$z$ plane with positive rotation defined by the right hand rule applied to the $x$-axis. In this simple case the angles are the same as the angles of the laser line scanners in the U-frame.
+
+Substituting this into the formulae \cref{eq:circle_fit_bias,eq:circle_fit_variance} above gives
+\begin{align*}
+    \text{E}[\Delta_1 R]   & =,                                   \\
+    s(a)  & = \sqrt{(\text{cov}(\Delta_1 Q))_{11}} = , \\
+    \text{cov}(\Delta_1 b) & = \sqrt{(\text{cov}(\Delta_1 Q))_{22}} = , \\
+    \text{cov}(\Delta_1 R) & = \sqrt{(\text{cov}(\Delta_1 Q))_{33}} = .
+\end{align*}
