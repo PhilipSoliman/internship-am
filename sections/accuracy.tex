@@ -2,23 +2,23 @@
 This section gives a mathematical estimate for the accuracy of circle fit algorithms that minimize geometric distances. This is useful knowlegde for LUA, since this kind of `geometric circle fit' algorithm is used to form a 3-dimensional representation of the pipes, among other things (section \ref{ssec:code_flow}). This discussion then ends with the implementation in the LUA software of a new kind of circle fit algrorithm that has a variance that is the same as the least squares method, but no bias in its estimation of the circle radius. This section builds on the methods described in the paper by \citeauthor{alsharadqah_chernov_circle_fitting} \cite{alsharadqah_chernov_circle_fitting}.
 
 \subsection{Statistical model}\label{ssec:statistical_model}
-In order to estimate the accuracy of a circle fit, we need to define a statistical model for the error in the input. To that end, we assume that the data points $(x_i, y_i)$ are noisy observations of the true points $(\tilde{x}_i, \tilde{y}_i)$, where the noise is i.i.d. normally distributed with bias 0 and variance $s^2$ \cite[section 2]{alsharadqah_chernov_circle_fitting}.
+In order to estimate the accuracy of a circle fit, we need to define a statistical model for the error in the input. To that end, we assume that the data points $(y_i, z_i)$ are noisy observations of the true points $(\tilde{y}_i, \tilde{z}_i)$, where the noise is i.i.d. normally distributed with bias 0 and variance $s^2$ \cite[section 2]{alsharadqah_chernov_circle_fitting}.
 \begin{equation}
-    x_i = \tilde{x}_i + \delta x_i, \quad y_i = \tilde{y}_i + \delta y_i, \quad \delta x_i, \delta y_i \sim N(0, s^2).
+    y_i = \tilde{y}_i + \delta y_i, \quad z_i = \tilde{z}_i + \delta z_i, \quad \delta y_i, \delta z_i \sim N(0, s^2).
 \end{equation}
 
 This gives that the true points must lie on a circle, satisfying the equation
 \begin{equation}
-    (\tilde{x}_i - \tilde{a})^2 + (\tilde{y}_i - \tilde{b})^2 = \tilde{R}^2 \quad \text{for} i = 1, \dots, n, \text{ midpoint } (\tilde{a}, \tilde{b}) \text{ and radius } \tilde{R}.
+    (\tilde{y}_i - \tilde{a})^2 + (\tilde{z}_i - \tilde{b})^2 = \tilde{R}^2 \quad \text{for} i = 1, \dots, n, \text{ midpoint } (\tilde{a}, \tilde{b}) \text{ and radius } \tilde{R}.
 \end{equation}
 
 In the case of LUA the angles of the laser line scanners in the U-frame are known (section \ref{ssec:laser_line_scanners}). This suggests normalisation of the data points to the unit circle, which is done by
 \begin{equation}
-    u_i = \frac{\tilde{x}_i - \tilde{a}}{\tilde{R}} = \cos{\phi_i}, \quad v_i = \frac{\tilde{y}_i - \tilde{b}}{\tilde{R}} = \sin{\phi_i},
+    u_i = \frac{\tilde{y}_i - \tilde{a}}{\tilde{R}} = \cos{\phi_i}, \quad v_i = \frac{\tilde{z}_i - \tilde{b}}{\tilde{R}} = \sin{\phi_i},
 \end{equation}
-where $\phi_i$ is the angle corresponding to the true point $(\tilde{x}_i, \tilde{y}_i)$ projected on the pipe (or ILUC ring/ -ribs) by the $i^{\text{th}}$ laser line scanner. This leads to the normalised data matrix $W$ with rows $W_i = (u_i, v_i, 1)^T$.
+where $\phi_i$ is the angle corresponding to the true point $(\tilde{y}_i, \tilde{z}_i)$ projected on the pipe (or ILUC ring/ -ribs) by the $i^{\text{th}}$ laser line scanner. This leads to the normalised data matrix $W$ with rows $W_i = (u_i, v_i, 1)^T$.
 
-Define the vector of estimates $Q = (a, b, r)^T$ for the circle parameters. Then, the first order terms in the Taylor expansion of $Q$ in terms of $\delta x_i, \delta y_i$ is denoted by $\Delta_1Q$. The accuracy of the circle fit can then be estimated by the variance of $\Delta_1Q$ \cite[section 2]{alsharadqah_chernov_circle_fitting}.
+Define the vector of estimates $Q = (a, b, r)^T$ for the circle parameters. Then, let the first order terms in the Taylor expansion of $Q$ in terms of $\delta y_i, \delta z_i$ be denoted by $\Delta_1Q$. The accuracy of the circle fit can then be estimated by the variance of $\Delta_1Q$ \cite[section 2]{alsharadqah_chernov_circle_fitting}.
 
 \subsection{Accuracy estimation}
 The geometric circle fit has both bias and (co-)variance. under the assumption that the number of data points approaches infinity $n \rightarrow \infty$, the bias is given by
@@ -37,21 +37,31 @@ Taking the diagonal elements of the covariance matrix gives the variance of the 
 It remains to estimate the noise level $s$ in the data and the true angles $\phi_i$ for all $i$. From section \ref{ssec:laser_line_scanners} it is known that the resolution of the laser line scanners is $47 \mu m$ to $104 \mu m$ in the $x$-direction and $2 \mu$ in the $z$-direction. This suggests that the noise level $s$ is on the order of $10^{-4}$ m. This is a rough estimate, but it is sufficient for the purposes of this discussion. As stated in the previous section \ref{ssec:statistical_model}, the true angles correspond to the angle of the laser line scanner in the U-frame.
 
 Using the above circle fit accuracy can be calculated for the idealised scenario where a 24-inch (= 0.5 m) pipe is exactly in the center of the U-frame with zero pitch or yaw. In this case
-\todo{check angles, possible recalculate result below}
 \begin{align*}
     \tilde{a} & = \tilde{b} = 0, \quad \tilde{R} = 0.5 \ [m], \\
-    \phi_1    & = -\frac{\pi}{4},                             \\
-    \phi_2    & = \frac{\pi}{4},                              \\
-    \phi_3    & =  \frac{5\pi}{8},                            \\
-    \phi_4    & = -\frac{5\pi}{8},                            \\
+    \phi_1    & = \frac{\pi}{4},                              \\
+    \phi_2    & = \frac{3\pi}{4},                             \\
+    \phi_3    & = \frac{9\pi}{8},                             \\
+    \phi_4    & = \frac{15\pi}{8},                            \\
     \phi_5    & = \pi,
 \end{align*}
 where the angles are measured from the $z$-axis in the $y$-$z$ plane with positive rotation defined by the right hand rule applied to the $x$-axis. In this simple case the angles are the same as the angles of the laser line scanners in the U-frame.
 
 Substituting this into \cref{eq:circle_fit_bias,eq:circle_fit_variance} above gives
 \begin{align*}
-    \text{E}[\Delta_1 R] & = 0.04 \mu \text{m},                                     \\
-    s[a]                 & = \sqrt{(\text{cov}[\Delta_1 Q])_{11}} = 0.07 \ \text{mm}, \\
-    s[b]                 & = \sqrt{(\text{cov}[\Delta_1 Q])_{22}} = 0.06 \ \text{mm}, \\
-    s[R]                 & = \sqrt{(\text{cov}[\Delta_1 Q])_{33}} = 0.04 \ \text{mm}.
+    \text{E}[\Delta_1 R] & = 0.04 \mu \text{m},                                       \\
+    s[a]                 & = \sqrt{(\text{cov}[\Delta_1 Q])_{11}} = 0.05 \ \text{mm}, \\
+    s[b]                 & = \sqrt{(\text{cov}[\Delta_1 Q])_{22}} = 0.09 \ \text{mm}, \\
+    s[R]                 & = \sqrt{(\text{cov}[\Delta_1 Q])_{33}} = 0.05 \ \text{mm}.
 \end{align*}
+
+Hence, the accuracy of the geometric circle fit is given by
+\begin{equation}
+    \epsilon_{\text{midpoint}} = \sqrt{s[a]^2 + s[b]^2 } = 0.11 \ \text{mm}, \quad \epsilon_{\text{radius}} = s[R] \approx 0.05 \ \text{mm}.
+    \label{eq:circle_fit_accuracy}
+\end{equation}
+
+Interestingly, the standard deviation of the midpoint estimate is larger in the $z$-direction than the $y$-direction. This can be attributed to the positioning of the laser line scanners in the U-frame; two on each side of the pipe near the $y$-plane and only one directly below in the $z$-plane. This suggests that the accuracy of the midpoint estimate can be improved upon by adding more laser line scanners in the $z$-direction.
+
+\subsection{Implementation of a new circle fit algorithm}
+The above circle fit algorithm has a bias in the radius estimate. This is not ideal for the LUA system, since the radius of the pipe is a critical estimate in determining sufficient line-up (section \ref{ssec:oop_lua} and \ref{ssec:code_flow}). Therefore, a new circle fit algorithm was implemented in the LUA software that has the same variance as the least squares method, but no bias in the radius estimate. This is done by using the method of \citeauthor{alsharadqah_chernov_circle_fitting} termed `Hyper accurate algebraic circle fit' \cite{alsharadqah_chernov_circle_fitting}. Additionally, the old code was refactored to improve readability and maintainability. The hyper accurate fit is implemented in code listing \ref{lst:circle_fit} and it is added to the function \lstinline[language=C]|PipeFaceFinder::findCircleNPoints| which is used in the LUA software to fit pipes in 3D, listing \ref{lst:find_circle_n_points}.

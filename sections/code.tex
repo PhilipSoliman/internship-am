@@ -1,0 +1,157 @@
+\section*{Code}
+\begin{lstlisting}[language=C++, caption={Implementation of the new circle fit algorithm in the LUA software.}, label={lst:circle_fit}]
+    Vector2f PipeFaceFinder::findCircleSVDHyper( 
+        const Eigen::VectorXf& X, 
+        const Eigen::VectorXf& Y, 
+        float& radius )
+    {
+        Vector2f center;
+        int      n = X.rows();
+        VectorXf R = X.array() * X.array() + Y.array() * Y.array();
+        MatrixXf D( n, 4 );
+        D.col( 0 ) = R;
+        D.col( 1 ) = X;
+        D.col( 2 ) = Y;
+        D.col( 3 ).setOnes();
+    
+        JacobiSVD<MatrixXf> svd( D, ComputeThinU | ComputeThinV );
+        Vector4f            A;
+        if ( svd.singularValues()( 3 ) / svd.singularValues()( 0 ) < 1e-12 ) // singular
+        {
+            A = svd.matrixV().col( 3 );
+        }
+        else // regular
+        {
+            DiagonalMatrix<float, 4> S( svd.singularValues() );
+            Matrix4f                 N, W, Eigvecs;
+            Vector4f                 mean, Eigvals, Astar;
+    
+            mean = D.colwise().mean();
+            N << 8 * mean( 0 ), 4 * mean( 1 ), 4 * mean( 2 ), 2, //
+                4 * mean( 1 ), 1, 0, 0,                          //
+                4 * mean( 2 ), 0, 1, 0,                          //
+                2, 0, 0, 0;
+            W = svd.matrixV() * S * svd.matrixV().transpose();
+    
+            EigenSolver<MatrixXf> es;
+            es.compute( W * N.inverse() * W );
+            // taking the real part, since return type is complex
+            Eigvals = es.eigenvalues().real();
+            Eigvecs = es.eigenvectors().real();
+    
+            Vector4i index = Vector4i::LinSpaced( 0, 4 );
+            std::stable_sort(
+                index.begin(), 
+                index.end(), 
+                [&Eigvals]( size_t i1, size_t i2 ) { return Eigvals[i1] < Eigvals[i2]; } 
+            );
+    
+            Astar = Eigvecs.col( index( 1 ) );
+    
+            A = W.ldlt().solve( Astar );
+        }
+    
+        center = -A( Eigen::seq( 1, 2 ) ) / ( 2 * A( 0 ) );
+    
+        radius = std::sqrt( 
+            A( 1 ) * A( 1 ) + A( 2 ) * A( 2 ) - 4 * A( 0 ) * A( 3 ) ) / ( 2 * std::abs( A( 0 ) ) 
+        );
+    
+        return center;
+    }
+\end{lstlisting}
+
+\begin{lstlisting}[language=C++, caption={Refactored pipe face finder.}, label={lst:find_circle_n_points}]
+    pipeFace_s PipeFaceFinder::findCircleNPoints( const std::vector<Vector3f>& points,
+                                              std::vector<float>&          pointsDisToPlane,
+                                              std::vector<float>&          pointsDisToCircle )
+{
+    // ======================= //
+    // FIND BEST FITTING PLANE //
+    // ======================= //
+    int nrOfPoints = points.size();
+
+    // convert points to matrix
+    MatrixXf pointsMatrix( nrOfPoints, 3 );
+    pointsMatrix = Eigen::Map<const Eigen::Matrix<float, Eigen::Dynamic, 3, Eigen::RowMajor>>(
+        reinterpret_cast<const float*>( points.data() ), nrOfPoints, 3 );
+
+    // translate coordinates to centroid of data
+    Vector3f centroid = calculateCentroid( pointsMatrix );
+    pointsMatrix.rowwise() -= centroid.transpose();
+
+    // plane fitting algorithm
+    Vector3f normal;
+    normal = fitPlaneNR( pointsMatrix );
+
+    // ========================= //
+    // PROJECT POINTS ONTO PLANE //
+    // ========================= //
+    MatrixXf projectedPoints( nrOfPoints, 3 );
+    projectedPoints = projectPointsOntoPlane( pointsMatrix, normal );
+
+    // calculate distance of points to the plane
+    pointsDisToPlane.clear();
+    MatrixXf pointsDisToPlaneVectors = projectedPoints - pointsMatrix;
+    VectorXf pointsDisToPlaneVector  = pointsDisToPlaneVectors.rowwise().norm();
+
+    // transform to plane coordinates
+    MatrixXf planeBasis = spanPlane( normal );
+    MatrixXf projectedPointsInPlaneCoordinates( nrOfPoints, 2 );
+    projectedPointsInPlaneCoordinates = translateCoordinates( projectedPoints, planeBasis );
+
+    // ============= //
+    //  FIND CIRCLE  //
+    // ============= //
+    pipeFace_s tempPipeFace;
+
+    // circle finding algorithm
+    Vector2f circleCentre;
+    if ( nrOfPoints == 3 )
+    {
+        circleCentre = findCircleLSTSQ( projectedPointsInPlaneCoordinates.col( 0 ),
+                                        projectedPointsInPlaneCoordinates.col( 1 ),
+                                        tempPipeFace.radius );
+    }
+    else
+    {
+        circleCentre = findCircleSVDHyper( projectedPointsInPlaneCoordinates.col( 0 ),
+                                           projectedPointsInPlaneCoordinates.col( 1 ),
+                                           tempPipeFace.radius );
+    }
+
+    // calculate distance to the circle
+    pointsDisToCircle.clear();
+    MatrixXf pointsDisToCirclecCentreVectors( nrOfPoints, 2 );
+    pointsDisToCirclecCentreVectors  = 
+        projectedPointsInPlaneCoordinates.rowwise() - circleCentre.transpose();
+    VectorXf pointsDisToCircleVector = pointsDisToCirclecCentreVectors.rowwise().norm();
+    pointsDisToCircleVector.array() -= tempPipeFace.radius;
+
+    // ================================ //
+    // TRANSFORM BACK TO THE VESSEL     //
+    // ================================ //
+    // translate back to lab frame
+    Vector3f circleCentreGlobal =
+        centroid + circleCentre( 0 ) * planeBasis.col( 0 ) 
+        + circleCentre( 1 ) * planeBasis.col( 1 );
+
+    // ============= //
+    // STORE RESULTS //
+    // ============= //
+    std::copy( 
+        circleCentreGlobal.data(), circleCentreGlobal.data() + 3, begin( tempPipeFace.centrePos ) 
+    );
+    std::copy( normal.data(), normal.data() + 3, begin( tempPipeFace.centreDirVec ) );
+    std::copy( pointsDisToPlaneVector.data(),
+               pointsDisToPlaneVector.data() + nrOfPoints,
+               std::back_inserter( pointsDisToPlane ) );
+    std::copy( pointsDisToCircleVector.data(),
+               pointsDisToCircleVector.data() + nrOfPoints,
+               std::back_inserter( pointsDisToCircle ) );
+
+    tempPipeFace.found = true;
+
+    return tempPipeFace;
+}
+\end{lstlisting}
