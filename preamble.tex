@@ -3,80 +3,80 @@
 
 \usepackage[a4paper]{geometry}
 \geometry{
-  a4paper,
-  left=25mm,
-  right=25mm,
-  top=25mm,
-  bottom=25mm
+    a4paper,
+    left=25mm,
+    right=25mm,
+    top=25mm,
+    bottom=25mm
 }
 % title 
 \makeatletter
 \renewcommand\maketitle{
-  {
-      \vspace*{3cm}
-      \raggedright % Note the extra {
-      \begin{center}
-        {\normalsize \sffamily \course }\\[2ex]
-        {\Large \bfseries \sffamily \@title }\\[2ex]
-        {\normalsize  \@author}\\[1ex]
-        \@date\\[4ex]
-      \end{center}
-      \vspace*{1cm}
-      \begin{center}
-        \includegraphics[width=0.5\textwidth]{images/cover.jpg}
-      \end{center}
-    }
-
-    % TUD logo
     {
-      \begin{tikzpicture}[remember picture, overlay]
-        \node[anchor=north west, inner sep=40pt] at (current page.north west)
-        {\includegraphics[width=0.3\textwidth]{images/logo_TUD.png}};
-      \end{tikzpicture}
-    }
+            \vspace*{3cm}
+            \raggedright % Note the extra {
+            \begin{center}
+                {\normalsize \sffamily \course }\\[2ex]
+                {\Large \bfseries \sffamily \@title }\\[2ex]
+                {\normalsize  \@author}\\[1ex]
+                \@date\\[4ex]
+            \end{center}
+            \vspace*{1cm}
+            \begin{center}
+                \includegraphics[width=0.5\textwidth]{images/cover.jpg}
+            \end{center}
+        }
 
-    % Allseas logo
-    {
-      \begin{tikzpicture}[remember picture, overlay]
-        \node[anchor=north east, inner sep=40pt] at (current page.north east)
-        {\includegraphics[width=0.3\textwidth]{images/logo_Allseas.png}};
-      \end{tikzpicture}
-    }
-
-    % uni supervisor info text (bottom left)
-    {
-      \begin{tikzpicture}[remember picture, overlay]
-        \node[anchor=south west, inner sep=40pt] at (current page.south west)
+        % TUD logo
         {
-          \begin{minipage}{0.5\textwidth}
-            \small
-            \textbf{University supervisor:} \\
-            \nameunisupervisor \\
-            \university \\
-            \faculty
-          \end{minipage}
-        };
-      \end{tikzpicture}
-    }
+            \begin{tikzpicture}[remember picture, overlay]
+                \node[anchor=north west, inner sep=40pt] at (current page.north west)
+                {\includegraphics[width=0.3\textwidth]{images/logo_TUD.png}};
+            \end{tikzpicture}
+        }
 
-    % company supervisor info text (bottom left)
-    {
-      \begin{tikzpicture}[remember picture, overlay]
-        \node[anchor=south east, inner sep=40pt] at (current page.south east)
+        % Allseas logo
         {
-          \begin{minipage}{0.5\textwidth}
-            \small
-            \begin{flushright}
-              \textbf{Company supervisor:} \\
-              \namecompsupervisor \\
-              \role \\
-              \department
-            \end{flushright}
-          \end{minipage}
+            \begin{tikzpicture}[remember picture, overlay]
+                \node[anchor=north east, inner sep=40pt] at (current page.north east)
+                {\includegraphics[width=0.3\textwidth]{images/logo_Allseas.png}};
+            \end{tikzpicture}
+        }
 
-        };
-      \end{tikzpicture}
-    }
+        % uni supervisor info text (bottom left)
+        {
+            \begin{tikzpicture}[remember picture, overlay]
+                \node[anchor=south west, inner sep=40pt] at (current page.south west)
+                {
+                    \begin{minipage}{0.5\textwidth}
+                        \small
+                        \textbf{University supervisor:} \\
+                        \nameunisupervisor \\
+                        \university \\
+                        \faculty
+                    \end{minipage}
+                };
+            \end{tikzpicture}
+        }
+
+        % company supervisor info text (bottom left)
+        {
+            \begin{tikzpicture}[remember picture, overlay]
+                \node[anchor=south east, inner sep=40pt] at (current page.south east)
+                {
+                    \begin{minipage}{0.5\textwidth}
+                        \small
+                        \begin{flushright}
+                            \textbf{Company supervisor:} \\
+                            \namecompsupervisor \\
+                            \role \\
+                            \department
+                        \end{flushright}
+                    \end{minipage}
+
+                };
+            \end{tikzpicture}
+        }
 }
 \makeatother
 
@@ -106,18 +106,18 @@
 \usepackage[dvipsnames]{xcolor}
 \usepackage{transparent}
 \lstset{frame=tb,
-  language=Python,
-  aboveskip=7mm,
-  belowskip=7mm,
-  columns=flexible,
-  basicstyle={\footnotesize\ttfamily},
-  keywordstyle={\bfseries\color{NavyBlue}},
-  commentstyle=\color{Gray},
-  stringstyle=\color{Green},
-  breaklines=false,
-  breakatwhitespace=true,
-  tabsize=3,
-  morecomment=[l][\color{Gray}\transparent{0.5}]{\#},
+    language=Python,
+    aboveskip=7mm,
+    belowskip=7mm,
+    columns=flexible,
+    basicstyle={\footnotesize\ttfamily},
+    keywordstyle={\bfseries\color{NavyBlue}},
+    commentstyle=\color{Gray},
+    stringstyle=\color{Green},
+    breaklines=false,
+    breakatwhitespace=true,
+    tabsize=3,
+    morecomment=[l][\color{Gray}\transparent{0.5}]{\#},
 }
 
 
@@ -185,12 +185,12 @@
 \showcommentstrue
 % \showcommentsfalse
 \ifshowcomments
-  \newcommand{\mynote}[2]{\fbox{\bfseries\sffamily\scriptsize{#1}}
-    {\small$\blacktriangleright$\textsf{\emph{#2}}$\blacktriangleleft$}}
-  \newcommand{\citehere}[0]{\textcolor{red}{\fbox{\bfseries\sffamily\scriptsize{CITATION}}}}
+    \newcommand{\mynote}[2]{\fbox{\bfseries\sffamily\scriptsize{#1}}
+        {\small$\blacktriangleright$\textsf{\emph{#2}}$\blacktriangleleft$}}
+    \newcommand{\citehere}[0]{\textcolor{red}{\fbox{\bfseries\sffamily\scriptsize{CITATION}}}}
 \else
-  \newcommand{\mynote}[2]{}
-  \newcommand{\citehere}[0]{}
+    \newcommand{\mynote}[2]{}
+    \newcommand{\citehere}[0]{}
 \fi
 \newcommand{\todo}[1]{\textcolor{blue}{\mynote{To do}{#1}}}
 
@@ -202,13 +202,13 @@
 % Hyperlinks
 \usepackage{hyperref}
 \hypersetup{
-  colorlinks=true,
-  linkcolor=blue,
-  filecolor=magenta,
-  urlcolor=blue,
-  citecolor=blue,
-  pdftitle={Overleaf Example},
-  pdfpagemode=FullScreen,
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,
+    urlcolor=blue,
+    citecolor=blue,
+    pdftitle={Overleaf Example},
+    pdfpagemode=FullScreen,
 }
 
 \urlstyle{same}
@@ -229,14 +229,16 @@
 % code listings
 \usepackage{listings}
 \lstset{language=C++,
-  % basicstyle=\ttfamily,
-  keywordstyle=\color{blue}\ttfamily,
-  stringstyle=\color{red}\ttfamily,
-  commentstyle=\color{ForestGreen}\ttfamily,
-  morecomment=[l][\color{magenta}]{\#}
+    % basicstyle=\ttfamily,
+    keywordstyle=\color{blue}\ttfamily,
+    stringstyle=\color{red}\ttfamily,
+    commentstyle=\color{ForestGreen}\ttfamily,
+    morecomment=[l][\color{magenta}]{\#}
 }
 
 % pseudocode
+\usepackage{algorithmicx}
+\usepackage{algorithm}
 \usepackage{algpseudocode}
 
 % enumerate
