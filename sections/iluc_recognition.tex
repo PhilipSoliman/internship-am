@@ -179,3 +179,6 @@ where $j$ is the index of the ILUC rib edge point and $k$ is the index of the pa
 A major assumption of this model is that the cylinder is close to the $x$-axis. This is in fact the case for the ILUC in the coordinate system of the LUA software. 
 
 Furthemore, the initial parameters cannot be too far off from the minimizing parameters, because algorithm \ref{alg:iluc_optimisation} is iterative. A bad initial guess can lead to slow (sub-quadratic) convergence, local minima or divergence. However, the initial parameters of the cylinder are obtained from the ILUC face estimate resulting from algorithm \ref{alg:iluc_estimation}. Hence, the initial parameters are already close to the minimizing parameters.
+
+\subsection{ILUC face accuracy}
+\todo{Add a paragraph about the accuracy of the ILUC face.}
