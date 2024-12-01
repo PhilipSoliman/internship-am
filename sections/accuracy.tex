@@ -36,16 +36,7 @@ Taking the diagonal elements of the covariance matrix gives the variance of the 
 
 It remains to estimate the noise level $s$ in the data and the true angles $\phi_i$ for all $i$. From section \ref{ssec:laser_line_scanners} it is known that the resolution of the laser line scanners is $47 \mu m$ to $104 \mu m$ in the $x$-direction and $2 \mu$ in the $z$-direction. This suggests that the noise level $s$ is on the order of $10^{-4}$ m. This is a rough estimate, but it is sufficient for the purposes of this discussion. As stated in the previous section \ref{ssec:statistical_model}, the true angles correspond to the angle of the laser line scanner in the U-frame.
 
-Using the above circle fit accuracy can be calculated for the idealised scenario where a 24-inch (= 0.5 m) pipe is exactly in the center of the U-frame with zero pitch or yaw. In this case
-\begin{align*}
-    \tilde{a} & = \tilde{b} = 0, \quad \tilde{R} = 0.5 \ [m], \\
-    \phi_1    & = \frac{\pi}{4},                              \\
-    \phi_2    & = \frac{3\pi}{4},                             \\
-    \phi_3    & = \frac{9\pi}{8},                             \\
-    \phi_4    & = \frac{15\pi}{8},                            \\
-    \phi_5    & = \pi,
-\end{align*}
-where the angles are measured from the $z$-axis in the $y$-$z$ plane with positive rotation defined by the right hand rule applied to the $x$-axis. In this simple case the angles are the same as the angles of the laser line scanners in the U-frame.
+Using the above circle fit accuracy can be calculated for the idealised scenario where a 24-inch (= 0.5 m) pipe is exactly in the center of the U-frame with zero pitch or yaw. In this case, the angles of the true poins are the same as the angles of the laser line scanners in equation \ref{eq:laser_angles}.
 
 Substituting this into \cref{eq:circle_fit_bias,eq:circle_fit_variance} above gives
 \begin{align*}

@@ -10,10 +10,21 @@ Figure \ref{fig:U-frame} shows the U-Frame. The U-frame is a part of the automat
     \label{fig:U-frame}
 \end{figure}
 
+The U-Frame is given a right-handed cartesian coordinate system. The origin of the coordinate system is at the center of the U-Frame. The $x$-axis points towards the new joint, the $y$-axis points left (seen from the main line) and the $z$-axis points upwards. 
+
 \subsection{Laser line scanners} \label{ssec:laser_line_scanners}
 The laserline scanners measure in 2 dimensions, width ($x$-direction) and depth ($z$-direction). The scanners each generate 4192 data points in any one measurement. The frequency of the measurements in only limited by how fast the laser line scanner runs (see section \ref{ssec:code_flow}). The maximum scanning frequency of the lasers lies anywhere between 600 and 9000 Hz \cite{gocator2650datasheet}.
 
-The laser line scanners \todo{add angles and axes}
+The lasers measure in their respective coordinate systems. These measurements are then transformed to the U-Frame's coordinate system. To perfrom this transformation, the laser line scanners angles with respect to the U-Frame's coordinate system are needed. These angles are 
+\begin{align}
+    \phi_1    & = \frac{\pi}{4},                              \\
+    \phi_2    & = \frac{3\pi}{4},                             \\
+    \phi_3    & = \frac{9\pi}{8},                             \\
+    \phi_4    & = \frac{15\pi}{8},                            \\
+    \phi_5    & = \pi,
+    \label{eq:laser_angles}
+\end{align}
+where the angles are measured from the $z$-axis in the $y$-$z$ plane with positive rotation defined by the right hand rule applied to the $x$-axis. In this simple case the angles are the same as the angles of the laser line scanners in the U-frame.
 
 An important aspect of the laser line scanners is their Field of View (FOV).
 The FOV is the area in which the laser line scanners can detect objects. Figure \ref{fig:lls_fov} gives the FOV of the laser line scanners.
