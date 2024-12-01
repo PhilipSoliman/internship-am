@@ -1,5 +1,5 @@
 \section{Accuracy of circle fits} \label{sec:accuracy}
-This section gives a mathematical estimate for the accuracy of circle fit algorithms that minimize geometric distances. This is useful knowlegde for LUA, since this kind of `geometric circle fit' algorithm is used to form a 3-dimensional representation of the pipes, among other things (section \ref{ssec:code_flow}). This discussion then ends with the implementation in the LUA software of a new kind of circle fit algrorithm that has a variance that is the same as the least squares method, but no bias in its estimation of the circle radius. This section builds on the methods described in the paper by \citeauthor{alsharadqah_chernov_circle_fitting} \cite{alsharadqah_chernov_circle_fitting}.
+This section gives a mathematical estimate for the accuracy of circle fit algorithms that minimize geometric distances. This is useful knowlegde for LUA, since this kind of `geometric circle fit' algorithm is used to form a 3-dimensional representation of the pipes, among other things (section \ref{ssec:code_flow}). This discussion then ends with the implementation in the LUA software of a new kind of circle fit algrorithm that has a variance that is the same as the least squares method, but possesses no bias in its estimation of the circle radius. This section builds on the methods described in the paper by \citeauthor{alsharadqah_chernov_circle_fitting} \cite{alsharadqah_chernov_circle_fitting}.
 
 \subsection{Statistical model}\label{ssec:statistical_model}
 In order to estimate the accuracy of a circle fit, we need to define a statistical model for the error in the input. To that end, we assume that the data points $(y_i, z_i)$ are noisy observations of the true points $(\tilde{y}_i, \tilde{z}_i)$, where the noise is i.i.d. normal random variables with bias 0 and variance $s^2$ \cite[section 2]{alsharadqah_chernov_circle_fitting} such that
@@ -34,7 +34,7 @@ and therefore the bias exists only in the radius estimate as $\text{E}[\Delta_1 
 
 Taking the diagonal elements of the covariance matrix gives the variance of the estimates for the circle parameters. Taking the square root of these variances gives the standard deviation $s(\cdot)$ of the estimates. The latter is good indicator of the accuracy of the circle fit.
 
-It remains to estimate the noise level $s$ in the data and the true angles $\phi_i$ for all $i$. From section \ref{ssec:laser_line_scanners} it is known that the resolution of the laser line scanners is $47 \mu m$ to $104 \mu m$ in the $x$-direction and $2 \mu$ in the $z$-direction. This suggests that the noise level $s$ is on the order of $10^{-4}$ m. This is a rough estimate, but it is sufficient for the purposes of this discussion. As stated in the previous section \ref{ssec:statistical_model}, the true angles correspond to the angle of the laser line scanner in the U-frame.
+It remains to estimate the noise level $s$ in the data and the true angles $\phi_i$ for all $i$. From section \ref{ssec:laser_line_scanners} it is known that the resolution of the laser line scanners is $47 \mu$m to $104 \mu$m in the $x$-direction and $2 \mu$m in the $z$-direction. This suggests that the noise level $s$ is on the order of $10^{-4}$ m. This is a rough estimate, but it is sufficient for the purposes of this discussion. As stated in the previous section \ref{ssec:statistical_model}, the true angles correspond to the angle of the laser line scanner in the U-frame.
 
 Using the above circle fit accuracy can be calculated for the idealised scenario where a 24-inch (= 0.5 m) pipe is exactly in the center of the U-frame with zero pitch or yaw. In this case, the angles of the true poins are the same as the angles of the laser line scanners in equation \ref{eq:laser_angles}.
 
@@ -48,7 +48,7 @@ Substituting this into \cref{eq:circle_fit_bias,eq:circle_fit_variance} above gi
 
 Hence, the accuracy of the geometric circle fit is given by
 \begin{equation}
-    \epsilon_{\text{midpoint}} = \sqrt{s[a]^2 + s[b]^2 } = 0.11 \ \text{mm}, \quad \epsilon_{\text{radius}} = s[R] \approx 0.05 \ \text{mm}.
+    \epsilon_{\text{midpoint}} \approx \sqrt{s[a]^2 + s[b]^2 } = 0.11 \ \text{mm}, \quad \epsilon_{\text{radius}} = s[R] \approx 0.05 \ \text{mm}.
     \label{eq:circle_fit_accuracy}
 \end{equation}
 

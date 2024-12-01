@@ -1,4 +1,4 @@
-\section{Optimize \& refactor code} \label{sec:optimize}
+\section{Optimise \& refactor code} \label{sec:optimize}
 In section \ref{ssec:profiling_results} it is shown that the function \lstinline[language=c]|LineFinder::calculateNrPointsInEachBin| is the most time consuming function in all phases of the LUA software.
 
 Before optimization can take place it is essential to understand the structure of this part of the LUA software. Algorithm \ref{alg:calculateNrPointsInEachBin} shows the pseudo code of the function \lstinline[language=c]|LineFinder::calculateNrPointsInEachBin|.
@@ -61,6 +61,6 @@ Figure \ref{fig:profiling_bottleneck_optimized} shows the profiling results of t
     \label{fig:profiling_bottleneck_optimized}
 \end{figure}
 
-Comparing lines 55-57 from figure \ref{fig:profiling_results_precalculation} with lines 81-84 from figure \ref{fig:profiling_bottleneck} shows that both the percentage of CPU time and the number of times these lines are sampled by the profiler are lower in the optimized case. This is a clear indication that the optimizations have been successful.
+Comparing lines 55-57 from figure \ref{fig:profiling_results_precalculation} with lines 81-84 from figure \ref{fig:profiling_bottleneck} shows that both the percentage of CPU time and the number of times these lines are sampled by the profiler are lower in the optimised case. This is a clear indication that the optimizations have been successful.
 
 Further optimizations can be made by avoiding the most time consuming operation in the inner for-loop \ref{bottlen:line_assocation}. In general an if-statement in a for-loop causes a `pipeline stall' \cite[lecture 7, "Pipeline stall", slide 19]{scientific_programming}. This is because the CPU must wait until the if-statement is evaluated before it can continue executing the next instruction. This effect is made worse by the fact that the if-statement is in the inner most nested for-loop. The solution to this problem is to use a data structure that allows for fast look-up of data points that are already associated to a line. Perhaps this can be done by using a hash table. Alternatively, algorithmic adjustments can be made to avoid the if-statement entirely. In any case, this is left as a topic for future work.

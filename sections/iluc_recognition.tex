@@ -13,7 +13,7 @@ The ILUC consists of ten ribs (see \cref{fig:iluc,fig:oop_lua}), each of which i
 These edge points are used in algorithm \ref{alg:iluc_recognition} to obtain an estimate of the ILUC face.
 \begin{algorithm}
     \begin{algorithmic}[1]
-        \State \textbf{function: } \lstinline[language=C]|multiSensorAnalyser_c::checkForILUCFace|
+        \State \textbf{function} \lstinline[language=C]|multiSensorAnalyser_c::checkForILUCFace|
         \State Obtain ILUC rib edge points from the profile analysers
         \State \textbf{If} there are more than six edge points \textbf{then}
         \State \quad Run \lstinline[language=C]|multiSensorAnalyser_c::analyseILUCRibs| (see algorithm \ref{alg:iluc_estimation})
@@ -33,7 +33,7 @@ These edge points are used in algorithm \ref{alg:iluc_recognition} to obtain an 
 
 
 \subsection{ILUC direction estimation}
-The problem of estimating the ILUC face can be solved by combininh circle fits on the ILUC rib edges. The midpoints of these ILUC rib edge circle fits can be used to estimate the ILUC direction. The algorithm is described in algorithm \ref{alg:iluc_estimation}.
+The problem of estimating the ILUC face can be solved by combining circle fits on the ILUC rib edges. The midpoints of these ILUC rib edge circle fits can be used to estimate the ILUC direction. The algorithm is described in algorithm \ref{alg:iluc_estimation}.
 \begin{algorithm}[H]
     \begin{algorithmic}[1]
         \State \textbf{function} \lstinline[language=C]|multiSensorAnalyser_c::analyseILUCRibs|
@@ -79,7 +79,7 @@ A visual representation of the steps of algorithm \ref{alg:iluc_estimation} is s
     \end{subfigure}
     \begin{subfigure}[c]{0.45\textwidth}
         \includegraphics[width=\textwidth]{images/ILUC_corrected_direction.png}
-        \caption{Lines 10 and 11 from algorithm \ref{alg:iluc_estimation}. The ILUC rib midpoints from figure \ref{fig:iluc_matched_edges} are filtered for outliers (marked with `$\times$' symbol) and used to obtain a corrected ILUC direction (orange vector). The difference between the corrected and approximate ILUC direction is approximately $0.7^{\circ}$.}
+        \caption{Lines 10 and 11 from algorithm \ref{alg:iluc_estimation}. The ILUC rib midpoints from figure \ref{fig:iluc_matched_edges} are filtered for outliers (marked with `$\times$' symbol) and used to obtain a corrected ILUC direction (orange vector). The difference between the corrected and approximate ILUC direction in this example is approximately $0.7^{\circ}$.}
         \label{fig:iluc_corrected_direction}
     \end{subfigure}
     \caption{Visualisation of algorithm \ref{alg:iluc_estimation}.}
@@ -114,11 +114,11 @@ The ILUC direction obtained from algorithm \ref{alg:iluc_estimation} can be furt
 \end{algorithm}
 The `stopping criterion' in algorithm \ref{alg:iluc_optimisation} refers to one of the following conditions:
 \begin{itemize}
-    \item The maximum number of iterations is reached: $i > i_{max} = 100$.
+    \item The maximum number of iterations is reached: $i > i_{\text{max}} = 100$.
     \item The error becomes smaller than a certain threshold: $e < e_{\text{min}} = 5\times10^{-4} = 0.5 \text{mm}$.
-    \item The perdentual change of the loss function is smaller than a certain threshold: $\rho < \rho_{\text{min}} = 10^{-4} = 0.01\%$.
+    \item The percentual change of the loss function is smaller than a certain threshold: $\rho < \rho_{\text{min}} = 10^{-4} = 0.01\%$.
     \item The loss and/or error becomes NaN.
-    \item The condition number of the Jacobian matrix is too high: $\kappa > \kappa_{\text{max}} = 10^6$. This indicates that the routine has either converged to a minimum, is stuck in a local minimum or is stuck on a flat region of the loss function.
+    \item The condition number of the Jacobian matrix is too high: $\kappa(\mathbf{C}) > \kappa_{\text{max}} = 10^6$. This indicates that the routine has either converged to a (possibly local) minimum or is stuck on a flat region of the loss function.
 \end{itemize}
 The values of the thresholds are chosen based on the expected accuracy of the ILUC face and the computational resources available. The thresholds are chosen such that the optimisation routine converges within a reasonable amount of time and the ILUC face is accurate enough for the purposes of the LUA software.
 
@@ -176,10 +176,10 @@ where $j$ is the index of the ILUC rib edge point and $k$ is the index of the pa
     \label{eq:cylinder_rhs}
 \end{equation}
 
-A major assumption of this model is that the cylinder is close to the $x$-axis. This is in fact the case for the ILUC in the coordinate system of the LUA software.
+A major assumption of this model is that the cylinder is close to the $x$-axis. However, this is in fact the case for the ILUC in the U-frame's frame of reference.
 
-Furthemore, the initial parameters cannot be too far off from the minimizing parameters, because algorithm \ref{alg:iluc_optimisation} is iterative. A bad initial guess can lead to slow (sub-quadratic) convergence, local minima or divergence. However, the initial parameters of the cylinder are obtained from the ILUC face estimate resulting from algorithm \ref{alg:iluc_estimation}. Hence, the initial parameters are already close to the minimizing parameters.
+Furthemore, the initial parameters cannot be too far off from the minimizing parameters, because algorithm \ref{alg:iluc_optimisation} bases on a Taylor expansion of the model equation about the true solution. A bad initial guess can lead to slow (sub-quadratic) convergence, local minima or divergence. However, the initial parameters of the cylinder are obtained from the ILUC face estimate resulting from algorithm \ref{alg:iluc_estimation}. Hence, the initial parameters are already close to the minimizing parameters.
 
 \subsection{ILUC face accuracy}
-Table \ref{table:iluc_recognition_accuracy} shows the accuracy of the ILUC face recognition algorithm for various data sets of the ILUC. `stationary' refers to the ILUC being stationary, while `oscillating (XY)' and `oscillating (XZ)' refer to the ILUC oscillating in the $y$-$z$ plane and $x$-$z$ plane respectively. The table shows that the ILUC face recognition algorithm is able to accurately estimate the ILUC face for all data sets.
+Table \ref{table:iluc_recognition_accuracy} shows the accuracy of the ILUC face recognition algorithm for various data sets of the ILUC. `stationary' refers to the ILUC being stationary with respect to and centered within the U-frame, while `oscillating (XY)' and `oscillating (XZ)' refer to the ILUC oscillating in the U-frame's $y$-$z$ and $x$-$z$ plane respectively. The table shows that the ILUC face recognition algorithm is able to accurately estimate the ILUC face for all data sets.
 \input{tables/iluc_recognition_accuracy.tex}
