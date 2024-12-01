@@ -6,13 +6,14 @@ Figure \ref{fig:U-frame} shows the U-Frame. The U-frame is a part of the automat
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.7\textwidth]{images/u_frame_lasers.png}
-    \caption{The U-Frame. Most importantly, the U-frame houses five laser line scanners that are used to detect pipes and other objects like the ILUC. The U-Frame is mounted on an interface frame, which in turn is mounted on the sub-frame (not visibile here). The sub-frame is responsible for the U-Frame's movements. \todo{change laser light to blue}}
+    \caption{The U-Frame. Most importantly, the U-frame houses five laser line scanners that are used to detect pipes and other objects like the ILUC. The U-Frame is mounted on an interface frame, which in turn is mounted on the sub-frame (not visibile here). The sub-frame is responsible for the U-Frame's movements.}
     \label{fig:U-frame}
 \end{figure}
 
 \subsection{Laser line scanners} \label{ssec:laser_line_scanners}
-\todo{add sensor angles and define axes}
 The laserline scanners measure in 2 dimensions, width ($x$-direction) and depth ($z$-direction). The scanners each generate 4192 data points in any one measurement. The frequency of the measurements in only limited by how fast the laser line scanner runs (see section \ref{ssec:code_flow}). The maximum scanning frequency of the lasers lies anywhere between 600 and 9000 Hz \cite{gocator2650datasheet}.
+
+The laser line scanners \todo{add angles and axes}
 
 An important aspect of the laser line scanners is their Field of View (FOV).
 The FOV is the area in which the laser line scanners can detect objects. Figure \ref{fig:lls_fov} gives the FOV of the laser line scanners.

@@ -1,9 +1,17 @@
 \section{Conclusion}
 \label{sec:conclusion}
-Perform tests in the yard with the complete system, to test new code for points described in proposed approach:
-- Create a profiler for the code to search for slow operations. Milestone: profiler gives insight into performance of different parts of the code and allows comparison between different versions of said code. This way we can determine which is optimal
-- Find more efficient ways to perform the needed operations. Milestone: Increase overall code speed. Use profiler as quantification
-- Isolate parts of the mathematical model and test accuracy. Milestone: Mathematical as well as experimental estimation for line-up accuracy meets 0.1 mm requirement
-- Expand the fitting model to increase the workability of the complete system. Milestone: Successful and efficient recognition of ribbed cylinder allows for good pre-line-up of pipes
-bsection{Profiler} \label{ssec:code_refactoring}
 
+In conclusion, the proposed approach to improve the automated line-up (LUA) system has been successfully implemented and tested. The following key milestones were achieved:
+
+\begin{itemize}
+    \item \textbf{Create a profiler for the code to search for slow operations:} A profiler was developed to identify bottlenecks in the LUA software. The profiler provided valuable insights into the performance of different parts of the code, allowing for comparison between different versions. This enabled the identification of the most time-consuming functions, such as \lstinline[language=c]|LineFinder::calculateNrPointsInEachBin|, as discussed in section \ref{sec:profiler} and shown in Figure \ref{fig:profiling_bottleneck}.
+    
+    \item \textbf{Find more efficient ways to perform the needed operations:} By focusing on the identified bottlenecks, several optimizations were made to the code. These optimizations included prefetching data and precalculating values, which significantly increased the overall code speed. The profiler was used to quantify these improvements, as detailed in section \ref{sec:optimize} and illustrated in Figure \ref{fig:profiling_bottleneck_optimized}.
+    
+    \item \textbf{Isolate parts of the mathematical model and test accuracy:} The accuracy of the mathematical model was tested both mathematically and experimentally. The new circle fit algorithm, which has no bias in the radius estimate, was implemented and tested. The results showed that the new algorithm met the 0.1 mm accuracy requirement, as described in section \ref{sec:accuracy}.
+    
+    \item \textbf{Expand the fitting model to increase the workability of the complete system:} The fitting model was expanded to recognize the ribbed cylinder of the ILUC. This allowed for better pre-line-up of the pipes, improving the overall efficiency of the system. The successful recognition of the ILUC ribbed cylinder is discussed in section \ref{sec:iluc_recognition} and shown in Figure \ref{fig:iluc}.
+    
+\end{itemize}
+
+Overall, the improvements made to the LUA system have resulted in increased accuracy, efficiency, and maintainability. The successful implementation of the proposed approach demonstrates the potential for further advancements in automated line-up technology.
