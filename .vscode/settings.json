@@ -1,3 +1,5 @@
 {
-    "editor.defaultFormatter": "James-Yu.latex-workshop"
+    "editor.defaultFormatter": "James-Yu.latex-workshop",
+    "editor.wordWrap": "wordWrapColumn",
+    "editor.wordWrapColumn": 80
 }

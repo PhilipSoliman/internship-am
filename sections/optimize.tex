@@ -1,7 +1,9 @@
 \section{Optimise \& refactor code} \label{sec:optimize}
 In section \ref{ssec:profiling_results} it is shown that the function \lstinline[language=c]|LineFinder::calculateNrPointsInEachBin| is the most time consuming function in all phases of the LUA software.
 
-Before optimization can take place it is essential to understand the structure of this part of the LUA software. Algorithm \ref{alg:calculateNrPointsInEachBin} shows the pseudo code of the function \lstinline[language=c]|LineFinder::calculateNrPointsInEachBin|.
+Before optimization can take place it is essential to understand the structure of this part of the LUA software. The Hough transform finds straight line segments int the data. To do this it specifies a number of 'distance bins' and rotates these bins about some point (usually the origin) for certain amount of `search angles'. For each of the bins and search angles it keeps track of the number of points that fall within the bins borders. The bin and search angle that contains define a sub set of points and a direction vector that can be used to fit a line to. The function \lstinline[language=c]|LineFinder::calculateNrPointsInEachBin| is responsible for calculating the number of points that fall within each bin for a given search angle and the function \lstinline[language=c]|LineFinder::calculateBinContainingMostPoints| is responsible for finding the bin that contains the most points for a given search angle. Below the pseudo code for these functions is given.
+
+Algorithm \ref{alg:calculateNrPointsInEachBin} shows the pseudo code of the function \lstinline[language=c]|LineFinder::calculateNrPointsInEachBin|.
 
 \begin{algorithm}
     \begin{algorithmic}[1]
@@ -20,7 +22,7 @@ Before optimization can take place it is essential to understand the structure o
     \label{alg:calculateNrPointsInEachBin}
 \end{algorithm}
 
-Algorithm \ref{alg:calculateNrPointsInEachBin} is nested in a loop that iterates over search angles specified for the Hough transform. This is shown in algorithm \ref{alg:binContainingMostPoints}
+Algorithm \ref{alg:calculateNrPointsInEachBin} is nested in a loop that iterates over search angles specified for the Hough transform.  This is shown in algorithm \ref{alg:binContainingMostPoints}
 
 \begin{algorithm}
     \begin{algorithmic}[1]

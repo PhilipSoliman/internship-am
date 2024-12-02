@@ -25,10 +25,7 @@ The latest iteration of automated line-up is a system that uses 5 laser line sca
       \label{fig:portal}
 \end{figure}
 
-The laser line scanners generate 4192 data points in 5 different planes with a frequency of 60 $\sim$ 70 Hz. Initially,
-a line finding algorithm derived from a Hough transform \cite{hough_transform} is used to recover approximately
-straight sections from the laser's projection on the pipe. This allows for the recognition of the pipe ends or `bevels'
-from the data.
+The laser line scanners generate 4192 data points in 5 different planes with a frequency of 60 $\sim$ 70 Hz. Initially, a line finding algorithm derived from a Hough transform \cite{hough_transform} is used to recover approximately straight sections from the laser's projection on the pipe. This allows for the recognition of the pipe ends or `bevels' from the data (see \cref{ssec:code_flow,ssec:circle_fit_implementation}).
 
 Subsequently, the found pipe ends of the 5 sensors are combined to form a 3D representation of the pipe face.
 This is done using using a combination of Newton-Raphson optimization and a least squares fit.
@@ -41,3 +38,6 @@ The internship aims to improve the current automated line-up system by:
       \item [\textbf{b}] \textbf{Writing maintainable code} by refactoring the current codebase;
       \item [\textbf{c}] \textbf{Increasing machine accuracy} by comparing different pipe fitting algorithms.
 \end{enumerate}
+
+\subsection{Soceital impact}
+The societal impact of this project is that it will make the offshore industry more efficient and safer. More efficient, because the total pipeline production time is reduced and less work is required to be done by human operators. Safer, because the automated line-up system will reduce the amount of human operators required to work in the beadstall. This will reduce the risk of accidents and injuries. Moreover, a more accurate line up increases the integrity of the pipeline welds. This in turn will reduce the risk of leaks and spills, reducing the environmental impact of the offshore industry and possible costs associated with it. Ultimately, this will reduce cost of oil and gas transportation and make it more sustainable and accesible to, for example developing countries. 
